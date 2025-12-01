@@ -2,7 +2,6 @@
    EMAILJS CONFIGURATION - SmartPlant
    Configuration pour les notifications par email
    ============================================ */
-
 const EMAILJS_CONFIG = {
     // ⚠️ VOS VRAIES CLÉS EMAILJS (du test qui fonctionne)
     publicKey: 'CDN3p6l0QoJvNWnI0',  // Votre Public Key
@@ -21,7 +20,7 @@ const EMAILJS_CONFIG = {
     },
     
     // Délai minimum entre deux emails (en minutes)
-    minEmailDelay: 30,  // Un email max toutes les 30 min par type d'alerte
+    minEmailDelay: 2,  // Un email max toutes les 30 min par type d'alerte
     
     // Adresse email de réception
     recipientEmail: 'meftahmouna691@gmail.com'

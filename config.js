@@ -1,7 +1,6 @@
 // ============================================
 // CONFIGURATION SENSIBLE - NE PAS COMMITER
 // ============================================
-
 const API_CONFIG = {
     // Plant.id API Key
     // ⚠️ IMPORTANT: Créez votre propre clé sur https://plant.id/
