@@ -1,0 +1,311 @@
+{
+  "alertes": {
+    "arrosage": "",
+    "dernierEmail": ""
+  },
+  "arrosage": {
+    "automatique": {
+      "delaiMin": 60,
+      "duree": 5,
+      "seuilMin": 30
+    },
+    "manuel": {
+      "duree": 5
+    },
+    "programme": {
+      "prog1": {
+        "actif": true,
+        "duree": 5,
+        "heure": 7,
+        "minute": 0
+      },
+      "prog2": {
+        "actif": false,
+        "duree": 5,
+        "heure": 18,
+        "minute": 0
+      }
+    }
+  },
+  "capteurs": {
+    "humiditeAir": 65,
+    "humiditeSol": 45,
+    "pluie": 0,
+    "temperature": 22.5,
+    "timestamp": 1732640400
+  },
+  "commandes": {
+    "activerPompe": false,
+    "capturerPhoto": false,
+    "dureeManuelle": 5,
+    "heureArrosage": 7,
+    "minuteArrosage": 0,
+    "mode": "automatique",
+    "plantIdPourScan": ""
+  },
+  "configuration": {
+    "dureeArrosage": 5000,
+    "heureArrosage": 7,
+    "minuteArrosage": 0,
+    "mode": "automatique",
+    "seuilHumiditeBas": 30,
+    "seuilHumiditeHaut": 70
+  },
+  "systeme": {
+    "dernierArrosage": 1732618800,
+    "maladieDetectee": false,
+    "mode": "automatique",
+    "pompeActive": false,
+    "typeMaladie": ""
+  },
+  "plants": {
+    "-O7xK2mP8nQw9zRfYtLa": {
+      "name": "Tomate Coeur de Boeuf 1",
+      "variety": "Coeur de Boeuf",
+      "plantDate": "2025-01-15",
+      "location": "Potager Zone A",
+      "notes": "Plant vigoureux, bien expose au soleil",
+      "waterCount": 12,
+      "lastWatered": 1732618800000,
+      "aiScans": 3,
+      "lastScan": 1732618800000,
+      "diseaseDetected": false,
+      "lastUpdated": 1732640400000
+    },
+    "-O7xK2mP8nQw9zRfYtLb": {
+      "name": "Tomate Cherry 1",
+      "variety": "Cherry",
+      "plantDate": "2025-01-10",
+      "location": "Serre 1 Rangee B",
+      "notes": "Petites tomates cerises tres productives",
+      "waterCount": 15,
+      "lastWatered": 1732532400000,
+      "aiScans": 2,
+      "lastScan": 1732532400000,
+      "diseaseDetected": false,
+      "lastUpdated": 1732640400000
+    },
+    "-O7xK2mP8nQw9zRfYtLc": {
+      "name": "Tomate Roma 1",
+      "variety": "Roma",
+      "plantDate": "2025-01-20",
+      "location": "Potager Zone B",
+      "notes": "Variete italienne ideale pour sauces",
+      "waterCount": 8,
+      "lastWatered": 1732446000000,
+      "aiScans": 1,
+      "lastScan": 1732446000000,
+      "diseaseDetected": false,
+      "lastUpdated": 1732640400000
+    },
+    "-O7xK2mP8nQw9zRfYtLd": {
+      "name": "Tomate Beefsteak 1",
+      "variety": "Beefsteak",
+      "plantDate": "2025-01-12",
+      "location": "Potager Zone A Coin sud",
+      "notes": "Plant a tres gros fruits",
+      "waterCount": 10,
+      "lastWatered": 1732359600000,
+      "aiScans": 4,
+      "lastScan": 1732359600000,
+      "diseaseDetected": true,
+      "typeMaladie": "Suspicion mildiou",
+      "lastUpdated": 1732640400000
+    },
+    "-O7xK2mP8nQw9zRfYtLe": {
+      "name": "Tomate Coeur de Boeuf 2",
+      "variety": "Coeur de Boeuf",
+      "plantDate": "2025-01-18",
+      "location": "Potager Zone A",
+      "notes": "Deuxieme plant de la meme variete",
+      "waterCount": 9,
+      "lastWatered": 1732627200000,
+      "aiScans": 2,
+      "lastScan": 1732627200000,
+      "diseaseDetected": false,
+      "lastUpdated": 1732640400000
+    },
+    "-O7xK2mP8nQw9zRfYtLf": {
+      "name": "Tomate San Marzano 1",
+      "variety": "San Marzano",
+      "plantDate": "2025-01-08",
+      "location": "Serre 1 Rangee A",
+      "notes": "Variete italienne authentique",
+      "waterCount": 18,
+      "lastWatered": 1732633200000,
+      "aiScans": 5,
+      "lastScan": 1732633200000,
+      "diseaseDetected": false,
+      "lastUpdated": 1732640400000
+    },
+    "-O7xK2mP8nQw9zRfYtLg": {
+      "name": "Tomate Cherry 2",
+      "variety": "Cherry",
+      "plantDate": "2025-01-14",
+      "location": "Balcon Pot 30L",
+      "notes": "Plant en pot pour culture balcon",
+      "waterCount": 14,
+      "lastWatered": 1732624800000,
+      "aiScans": 2,
+      "lastScan": 1732624800000,
+      "diseaseDetected": false,
+      "lastUpdated": 1732640400000
+    },
+    "-O7xK2mP8nQw9zRfYtLh": {
+      "name": "Tomate Noire de Crimee",
+      "variety": "Autre",
+      "plantDate": "2025-01-16",
+      "location": "Potager Zone C",
+      "notes": "Variete ancienne russe",
+      "waterCount": 11,
+      "lastWatered": 1732621200000,
+      "aiScans": 3,
+      "lastScan": 1732621200000,
+      "diseaseDetected": false,
+      "lastUpdated": 1732640400000
+    }
+  },
+  "historique": {
+    "h001": { "timestamp": 1732554000, "temperature": 18.5, "humiditeAir": 72, "humiditeSol": 38, "pluie": 0 },
+    "h002": { "timestamp": 1732555800, "temperature": 19.2, "humiditeAir": 70, "humiditeSol": 37, "pluie": 0 },
+    "h003": { "timestamp": 1732557600, "temperature": 20.1, "humiditeAir": 68, "humiditeSol": 36, "pluie": 0 },
+    "h004": { "timestamp": 1732559400, "temperature": 21.3, "humiditeAir": 65, "humiditeSol": 35, "pluie": 0 },
+    "h005": { "timestamp": 1732561200, "temperature": 22.5, "humiditeAir": 63, "humiditeSol": 34, "pluie": 0 },
+    "h006": { "timestamp": 1732563000, "temperature": 23.8, "humiditeAir": 60, "humiditeSol": 33, "pluie": 0 },
+    "h007": { "timestamp": 1732564800, "temperature": 24.5, "humiditeAir": 58, "humiditeSol": 32, "pluie": 0 },
+    "h008": { "timestamp": 1732566600, "temperature": 25.2, "humiditeAir": 56, "humiditeSol": 31, "pluie": 0 },
+    "h009": { "timestamp": 1732568400, "temperature": 25.8, "humiditeAir": 54, "humiditeSol": 30, "pluie": 0 },
+    "h010": { "timestamp": 1732570200, "temperature": 26.1, "humiditeAir": 53, "humiditeSol": 29, "pluie": 0 },
+    "h011": { "timestamp": 1732572000, "temperature": 26.5, "humiditeAir": 52, "humiditeSol": 28, "pluie": 0 },
+    "h012": { "timestamp": 1732573800, "temperature": 26.8, "humiditeAir": 51, "humiditeSol": 48, "pluie": 0 },
+    "h013": { "timestamp": 1732575600, "temperature": 27.0, "humiditeAir": 50, "humiditeSol": 50, "pluie": 0 },
+    "h014": { "timestamp": 1732577400, "temperature": 26.5, "humiditeAir": 52, "humiditeSol": 49, "pluie": 0 },
+    "h015": { "timestamp": 1732579200, "temperature": 26.0, "humiditeAir": 54, "humiditeSol": 48, "pluie": 0 },
+    "h016": { "timestamp": 1732581000, "temperature": 25.3, "humiditeAir": 56, "humiditeSol": 47, "pluie": 0 },
+    "h017": { "timestamp": 1732582800, "temperature": 24.5, "humiditeAir": 58, "humiditeSol": 46, "pluie": 0 },
+    "h018": { "timestamp": 1732584600, "temperature": 23.8, "humiditeAir": 60, "humiditeSol": 45, "pluie": 0 },
+    "h019": { "timestamp": 1732586400, "temperature": 23.0, "humiditeAir": 62, "humiditeSol": 44, "pluie": 0 },
+    "h020": { "timestamp": 1732588200, "temperature": 22.5, "humiditeAir": 64, "humiditeSol": 43, "pluie": 0 },
+    "h021": { "timestamp": 1732590000, "temperature": 22.0, "humiditeAir": 65, "humiditeSol": 42, "pluie": 0 },
+    "h022": { "timestamp": 1732591800, "temperature": 21.5, "humiditeAir": 66, "humiditeSol": 41, "pluie": 0 },
+    "h023": { "timestamp": 1732593600, "temperature": 21.0, "humiditeAir": 67, "humiditeSol": 40, "pluie": 0 },
+    "h024": { "timestamp": 1732595400, "temperature": 20.5, "humiditeAir": 68, "humiditeSol": 39, "pluie": 0 },
+    "h025": { "timestamp": 1732597200, "temperature": 20.2, "humiditeAir": 69, "humiditeSol": 38, "pluie": 0 },
+    "h026": { "timestamp": 1732599000, "temperature": 19.8, "humiditeAir": 70, "humiditeSol": 37, "pluie": 0 },
+    "h027": { "timestamp": 1732600800, "temperature": 19.5, "humiditeAir": 71, "humiditeSol": 36, "pluie": 0 },
+    "h028": { "timestamp": 1732602600, "temperature": 19.2, "humiditeAir": 72, "humiditeSol": 35, "pluie": 0 },
+    "h029": { "timestamp": 1732604400, "temperature": 19.0, "humiditeAir": 73, "humiditeSol": 34, "pluie": 0 },
+    "h030": { "timestamp": 1732606200, "temperature": 18.8, "humiditeAir": 74, "humiditeSol": 33, "pluie": 0 },
+    "h031": { "timestamp": 1732608000, "temperature": 18.6, "humiditeAir": 75, "humiditeSol": 32, "pluie": 0 },
+    "h032": { "timestamp": 1732609800, "temperature": 18.5, "humiditeAir": 76, "humiditeSol": 31, "pluie": 0 },
+    "h033": { "timestamp": 1732611600, "temperature": 18.4, "humiditeAir": 77, "humiditeSol": 30, "pluie": 0 },
+    "h034": { "timestamp": 1732613400, "temperature": 18.3, "humiditeAir": 78, "humiditeSol": 29, "pluie": 0 },
+    "h035": { "timestamp": 1732615200, "temperature": 18.2, "humiditeAir": 78, "humiditeSol": 28, "pluie": 0 },
+    "h036": { "timestamp": 1732617000, "temperature": 18.2, "humiditeAir": 77, "humiditeSol": 48, "pluie": 0 },
+    "h037": { "timestamp": 1732618800, "temperature": 18.5, "humiditeAir": 76, "humiditeSol": 50, "pluie": 0 },
+    "h038": { "timestamp": 1732620600, "temperature": 19.0, "humiditeAir": 74, "humiditeSol": 49, "pluie": 0 },
+    "h039": { "timestamp": 1732622400, "temperature": 19.8, "humiditeAir": 72, "humiditeSol": 48, "pluie": 0 },
+    "h040": { "timestamp": 1732624200, "temperature": 20.5, "humiditeAir": 70, "humiditeSol": 47, "pluie": 0 },
+    "h041": { "timestamp": 1732626000, "temperature": 21.2, "humiditeAir": 68, "humiditeSol": 46, "pluie": 0 },
+    "h042": { "timestamp": 1732627800, "temperature": 21.8, "humiditeAir": 67, "humiditeSol": 45, "pluie": 0 },
+    "h043": { "timestamp": 1732629600, "temperature": 22.3, "humiditeAir": 66, "humiditeSol": 44, "pluie": 0 },
+    "h044": { "timestamp": 1732631400, "temperature": 22.7, "humiditeAir": 65, "humiditeSol": 43, "pluie": 0 },
+    "h045": { "timestamp": 1732633200, "temperature": 23.0, "humiditeAir": 64, "humiditeSol": 42, "pluie": 0 },
+    "h046": { "timestamp": 1732635000, "temperature": 23.2, "humiditeAir": 63, "humiditeSol": 42, "pluie": 0 },
+    "h047": { "timestamp": 1732636800, "temperature": 23.5, "humiditeAir": 62, "humiditeSol": 43, "pluie": 0 },
+    "h048": { "timestamp": 1732638600, "temperature": 23.1, "humiditeAir": 63, "humiditeSol": 44, "pluie": 0 },
+    "h049": { "timestamp": 1732640400, "temperature": 22.5, "humiditeAir": 65, "humiditeSol": 45, "pluie": 0 }
+  },
+  "historique_arrosage": {
+    "-O7xK3aB1cDe2fGh3iJk": {
+      "timestamp": 1732633200000,
+      "mode": "automatique",
+      "duree": 5,
+      "humiditeSolAvant": 28,
+      "humiditeSolApres": 52,
+      "reussi": true,
+      "plantIds": ["-O7xK2mP8nQw9zRfYtLa", "-O7xK2mP8nQw9zRfYtLe"]
+    },
+    "-O7xK3aB1cDe2fGh3iJl": {
+      "timestamp": 1732627200000,
+      "mode": "manuel",
+      "duree": 5,
+      "humiditeSolAvant": 35,
+      "humiditeSolApres": 58,
+      "reussi": true,
+      "plantIds": ["-O7xK2mP8nQw9zRfYtLe"]
+    },
+    "-O7xK3aB1cDe2fGh3iJm": {
+      "timestamp": 1732624800000,
+      "mode": "manuel",
+      "duree": 5,
+      "humiditeSolAvant": 32,
+      "humiditeSolApres": 55,
+      "reussi": true,
+      "plantIds": ["-O7xK2mP8nQw9zRfYtLg"]
+    },
+    "-O7xK3aB1cDe2fGh3iJn": {
+      "timestamp": 1732621200000,
+      "mode": "automatique",
+      "duree": 5,
+      "humiditeSolAvant": 29,
+      "humiditeSolApres": 51,
+      "reussi": true,
+      "plantIds": ["-O7xK2mP8nQw9zRfYtLh"]
+    },
+    "-O7xK3aB1cDe2fGh3iJo": {
+      "timestamp": 1732618800000,
+      "mode": "automatique",
+      "duree": 5,
+      "humiditeSolAvant": 27,
+      "humiditeSolApres": 49,
+      "reussi": true,
+      "plantIds": ["-O7xK2mP8nQw9zRfYtLa"]
+    },
+    "-O7xK3aB1cDe2fGh3iJp": {
+      "timestamp": 1732532400000,
+      "mode": "programme",
+      "duree": 5,
+      "humiditeSolAvant": 31,
+      "humiditeSolApres": 53,
+      "reussi": true,
+      "plantIds": ["-O7xK2mP8nQw9zRfYtLb"]
+    },
+    "-O7xK3aB1cDe2fGh3iJq": {
+      "timestamp": 1732446000000,
+      "mode": "manuel",
+      "duree": 5,
+      "humiditeSolAvant": 26,
+      "humiditeSolApres": 48,
+      "reussi": true,
+      "plantIds": ["-O7xK2mP8nQw9zRfYtLc"]
+    },
+    "-O7xK3aB1cDe2fGh3iJr": {
+      "timestamp": 1732359600000,
+      "mode": "manuel",
+      "duree": 5,
+      "humiditeSolAvant": 24,
+      "humiditeSolApres": 46,
+      "reussi": true,
+      "plantIds": ["-O7xK2mP8nQw9zRfYtLd"]
+    },
+    "-O7xK3aB1cDe2fGh3iJs": {
+      "timestamp": 1732273200000,
+      "mode": "automatique",
+      "duree": 5,
+      "humiditeSolAvant": 30,
+      "humiditeSolApres": 54,
+      "reussi": true,
+      "plantIds": ["-O7xK2mP8nQw9zRfYtLa", "-O7xK2mP8nQw9zRfYtLb"]
+    },
+    "-O7xK3aB1cDe2fGh3iJt": {
+      "timestamp": 1732186800000,
+      "mode": "programme",
+      "duree": 5,
+      "humiditeSolAvant": 28,
+      "humiditeSolApres": 50,
+      "reussi": true,
+      "plantIds": ["-O7xK2mP8nQw9zRfYtLf"]
+    }
+  }
+}

@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🌿</text></svg>">
+    <title>SmartPlant</title>
+    
+    <!-- Styles CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- TensorFlow.js & Teachable Machine -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.7.4/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.4/dist/teachablemachine-image.min.js"></script>
+</head>
+<body>
+    <!-- ============================================
+         SIDEBAR NAVIGATION
+         ============================================ -->
+    <div class="sidebar">
+        <div class="logo">
+            <span>🌿</span>
+            <span>SmartPlant</span>
+        </div>
+        
+        <div class="nav-item active" onclick="showPage('home')">
+            <span class="nav-icon">🏠</span>
+            <span>Accueil</span>
+        </div>
+        
+        <div class="nav-item" onclick="showPage('analyse')">
+            <span class="nav-icon">📊</span>
+            <span>Analyse</span>
+        </div>
+        
+        <div class="nav-item" onclick="showPage('watering')">
+            <span class="nav-icon">💧</span>
+            <span>Arrosage</span>
+        </div>
+        
+        <div class="nav-item" onclick="showPage('plants')">
+            <span class="nav-icon">🌱</span>
+            <span>Mes Plantes</span>
+        </div>
+        
+        <div class="nav-item" onclick="showPage('health')">
+            <span class="nav-icon">🏥</span>
+            <span>Santé</span>
+        </div>
+        
+        <div class="nav-item" onclick="showPage('configuration')">
+            <span class="nav-icon">⚙️</span>
+            <span>Configuration</span>
+        </div>
+    </div>
+
+    <!-- ============================================
+         MAIN CONTENT AREA
+         ============================================ -->
+    <div class="main-content">
+        
+        <!-- ========================================
+             PAGE 1: ACCUEIL
+             ======================================== -->
+        <div id="home" class="page active">
+            <div class="page-header">
+                <h1 class="page-title">Dashboard</h1>
+                <p class="page-subtitle">Vue d'ensemble de votre jardin intelligent</p>
+            </div>
+
+            <!-- Cartes Capteurs -->
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">💨 Humidité Air</div>
+                            <div class="card-value" id="homeHumiditeAir">--</div>
+                            <div class="card-label" id="homeHumiditeAirStatus">Chargement...</div>
+                        </div>
+                        <div class="card-icon">💨</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">💧 Humidité Sol</div>
+                            <div class="card-value" id="homeHumiditeSol">--</div>
+                            <div class="card-label" id="homeHumiditeSolStatus">Chargement...</div>
+                        </div>
+                        <div class="card-icon">💧</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">🌡️ Température</div>
+                            <div class="card-value" id="homeTemperature">--</div>
+                            <div class="card-label" id="homeTemperatureStatus">Chargement...</div>
+                        </div>
+                        <div class="card-icon">🌡️</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">🌧️ Pluie</div>
+                            <div class="card-value" id="homePluie">--</div>
+                            <div class="card-label" id="homePluieStatus">Détection...</div>
+                        </div>
+                        <div class="card-icon">🌧️</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Widget Météo -->
+            <div class="weather-widget">
+                <h3 style="margin-bottom: 15px;">☀️ Chargement météo...</h3>
+                <div style="text-align: center;">
+                    <div class="loading-spinner"></div>
+                </div>
+            </div>
+
+            <!-- Alertes -->
+            <h2 style="margin-bottom: 20px;">🔔 Alertes Récentes</h2>
+            <div id="alertsContainer">
+                <div class="alert alert-info">
+                    <span style="font-size: 24px;">ℹ️</span>
+                    <div>
+                        <strong>Système Opérationnel</strong>
+                        <p style="margin-top: 5px; color: var(--text-secondary);">
+                            Surveillance active. Détection IA en continu.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================
+             PAGE 2: ANALYSE
+             ======================================== -->
+        <div id="analyse" class="page">
+            <div class="page-header">
+                <h1 class="page-title">📊 Analyse & Monitoring</h1>
+                <p class="page-subtitle">Surveillance environnementale en temps réel</p>
+            </div>
+
+            <!-- Filtres temporels -->
+            <div style="margin-bottom: 30px; display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="btn btn-secondary" onclick="changeTimeRange('realtime')">Temps Réel</button>
+                <button class="btn btn-secondary" onclick="changeTimeRange('week')">7 Jours</button>
+                <button class="btn btn-secondary" onclick="changeTimeRange('month')">30 Jours</button>
+            </div>
+
+            <!-- Capteurs -->
+            <h2 style="margin: 30px 0 20px;">📡 Capteurs Environnementaux</h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-title">💧 Humidité Sol</div>
+                    <div class="card-value" id="analyseHumiditeSol">--</div>
+                    <div class="status-badge status-info">Chargement...</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">🌡️ Température</div>
+                    <div class="card-value" id="analyseTemperature">--</div>
+                    <div class="status-badge status-info">Chargement...</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">💨 Humidité Air</div>
+                    <div class="card-value" id="analyseHumiditeAir">--</div>
+                    <div class="status-badge status-info">Chargement...</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">🌧️ Pluie</div>
+                    <div class="card-value" id="analysePluie">--</div>
+                    <div class="card-label">Détection</div>
+                </div>
+            </div>
+
+            <!-- Graphiques -->
+            <h2 style="margin: 40px 0 20px;">📈 Évolution Temps Réel</h2>
+            
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px;">💧 Humidité du Sol</h3>
+                <div class="chart-wrapper">
+                    <canvas id="moistureChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px;">🌡️ Température et Humidité Air</h3>
+                <div class="chart-wrapper">
+                    <canvas id="tempChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Statistiques -->
+            <h2 style="margin: 40px 0 20px;">📊 Statistiques</h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-title">🌱 Score Santé</div>
+                    <div class="card-value" id="avgHealth">--</div>
+                    <div id="healthTrend">Calcul...</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">🩺 Diagnostics IA</div>
+                    <div class="card-value">23</div>
+                    <div style="color: var(--text-secondary);">Ce mois</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">💊 Taux Réussite</div>
+                    <div class="card-value">92%</div>
+                    <div style="color: var(--success);">Traitements</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">⏱️ Temps Réponse</div>
+                    <div class="card-value">1.2h</div>
+                    <div style="color: var(--success);">Moyenne</div>
+                </div>
+            </div>
+
+            <!-- Graphique Santé -->
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px;">📊 Évolution Santé Globale</h3>
+                <div class="chart-wrapper">
+                    <canvas id="healthChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================
+             PAGE 3: ARROSAGE
+             ======================================== -->
+        <div id="watering" class="page">
+            <div class="page-header">
+                <h1 class="page-title">💧 Gestion Arrosage</h1>
+                <p class="page-subtitle">3 modes : Automatique, Manuel, Programmé</p>
+            </div>
+
+            <!-- Sélection Mode -->
+            <div class="card" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.05) 100%);">
+                <h3 style="margin-bottom: 20px;">🎮 Mode d'Arrosage</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 25px;">
+                    <div class="mode-card" id="modeAutoCard" onclick="setWateringMode('automatique')">
+                        <div style="font-size: 48px; margin-bottom: 10px;">🤖</div>
+                        <h4>Automatique</h4>
+                        <p style="color: var(--text-secondary); font-size: 14px; margin-top: 8px;">
+                            Basé sur humidité
+                        </p>
+                        <div class="mode-indicator" id="modeAutoIndicator">
+                            <span class="status-badge status-success">✅ Actif</span>
+                        </div>
+                    </div>
+
+                    <div class="mode-card" id="modeManuelCard" onclick="setWateringMode('manuel')">
+                        <div style="font-size: 48px; margin-bottom: 10px;">👆</div>
+                        <h4>Manuel</h4>
+                        <p style="color: var(--text-secondary); font-size: 14px; margin-top: 8px;">
+                            Contrôle direct
+                        </p>
+                        <div class="mode-indicator" id="modeManuelIndicator">
+                            <span class="status-badge status-info">Disponible</span>
+                        </div>
+                    </div>
+
+                    <div class="mode-card" id="modeProgrammeCard" onclick="setWateringMode('programme')">
+                        <div style="font-size: 48px; margin-bottom: 10px;">⏰</div>
+                        <h4>Programmé</h4>
+                        <p style="color: var(--text-secondary); font-size: 14px; margin-top: 8px;">
+                            Horaires fixes
+                        </p>
+                        <div class="mode-indicator" id="modeProgrammeIndicator">
+                            <span class="status-badge status-info">Disponible</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statut -->
+                <div style="padding: 15px; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong id="currentModeText">Mode: Automatique</strong>
+                            <p style="color: var(--text-secondary); font-size: 14px; margin-top: 5px;" id="currentModeDescription">
+                                Arrosage auto si humidité < 30%
+                            </p>
+                        </div>
+                        <div id="pumpStatusBadge">
+                            <span class="status-badge status-info">⏸️ En Attente</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panneau Automatique -->
+            <div class="card" id="panelAutomatic">
+                <h3 style="margin-bottom: 20px;">🤖 Configuration Automatique</h3>
+                
+                <div class="input-group">
+                    <label class="input-label">🌱 Seuil Minimum (%)</label>
+                    <input type="number" class="input-field" id="autoSeuilMin" value="30" min="0" max="100">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">💧 Durée (secondes)</label>
+                    <input type="number" class="input-field" id="autoDuree" value="5" min="1" max="60">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">⏱️ Délai Min (minutes)</label>
+                    <input type="number" class="input-field" id="autoDelai" value="60" min="10" max="1440">
+                </div>
+
+                <button class="btn btn-primary" onclick="saveAutomaticConfig()">💾 Sauvegarder</button>
+            </div>
+
+            <!-- Panneau Manuel -->
+            <div class="card" id="panelManual" style="display: none;">
+                <h3 style="margin-bottom: 20px;">👆 Contrôle Manuel</h3>
+
+                <div style="text-align: center; padding: 40px 20px;">
+                    <div style="font-size: 80px; margin-bottom: 20px;" id="pumpIcon">💧</div>
+                    <h2 style="margin-bottom: 15px;" id="pumpStatusText">Pompe Désactivée</h2>
+                    
+                    <div style="margin: 30px 0;">
+                        <button class="btn-pump" id="btnTogglePump" onclick="toggleManualPump()">
+                            <span style="font-size: 24px;">▶️</span>
+                            <span>Démarrer</span>
+                        </button>
+                    </div>
+
+                    <p style="color: var(--text-secondary); margin-top: 20px;">
+                        Durée : <strong id="manualDurationDisplay">5s</strong>
+                    </p>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">💧 Durée (secondes)</label>
+                    <input type="number" class="input-field" id="manualDuree" value="5" min="1" max="60" onchange="updateManualDuration()">
+                </div>
+            </div>
+
+            <!-- Panneau Programmé -->
+            <div class="card" id="panelScheduled" style="display: none;">
+                <h3 style="margin-bottom: 20px;">⏰ Programmation</h3>
+
+                <div class="schedule-item">
+                    <h4 style="margin-bottom: 15px;">Programme 1</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                        <div class="input-group">
+                            <label class="input-label">Heure</label>
+                            <input type="number" class="input-field" id="prog1Heure" value="7" min="0" max="23">
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">Minute</label>
+                            <input type="number" class="input-field" id="prog1Minute" value="0" min="0" max="59">
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">Durée (s)</label>
+                            <input type="number" class="input-field" id="prog1Duree" value="5" min="1" max="60">
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <label>Actif</label>
+                        <div class="toggle-switch active" id="prog1Toggle" onclick="this.classList.toggle('active')">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="schedule-item" style="margin-top: 20px;">
+                    <h4 style="margin-bottom: 15px;">Programme 2</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                        <div class="input-group">
+                            <label class="input-label">Heure</label>
+                            <input type="number" class="input-field" id="prog2Heure" value="18" min="0" max="23">
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">Minute</label>
+                            <input type="number" class="input-field" id="prog2Minute" value="0" min="0" max="59">
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">Durée (s)</label>
+                            <input type="number" class="input-field" id="prog2Duree" value="5" min="1" max="60">
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <label>Actif</label>
+                        <div class="toggle-switch" id="prog2Toggle" onclick="this.classList.toggle('active')">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onclick="saveScheduledConfig()" style="margin-top: 25px;">💾 Sauvegarder</button>
+            </div>
+
+            <!-- Statistiques -->
+            <h2 style="margin: 40px 0 20px;">📊 Statistiques</h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-title">💧 Aujourd'hui</div>
+                    <div class="card-value" id="waterToday">0L</div>
+                    <div class="card-label" id="waterTodayCount">0 arrosages</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">📅 Semaine</div>
+                    <div class="card-value" id="waterWeek">0L</div>
+                    <div class="card-label">Cette semaine</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">📊 Mois</div>
+                    <div class="card-value" id="waterMonth">0L</div>
+                    <div class="card-label">Ce mois</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">⏱️ Durée Moy</div>
+                    <div class="card-value" id="waterAvgDuration">0s</div>
+                    <div class="card-label">Par arrosage</div>
+                </div>
+            </div>
+
+            <!-- Historique -->
+            <div class="card">
+                <h3 style="margin-bottom: 20px;">📜 Historique</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Date & Heure</th>
+                            <th>Mode</th>
+                            <th>Durée</th>
+                            <th>Humidité Avant</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody id="wateringHistory">
+                        <tr>
+                            <td colspan="5" style="text-align: center;">Chargement...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ========================================
+             PAGE 4: MES PLANTES
+             ======================================== -->
+        <div id="plants" class="page">
+            <div class="page-header">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                    <div>
+                        <h1 class="page-title">🍅 Mes Plants de Tomates</h1>
+                        <p class="page-subtitle">Gestion de votre culture</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="showAddPlantModal()">
+                        <span style="font-size: 18px;">➕</span>
+                        <span>Ajouter Plant</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Vue d'ensemble -->
+            <div class="cards-grid" style="margin-bottom: 30px;">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">🌱 Total</div>
+                            <div class="card-value" id="totalPlants">0</div>
+                            <div class="card-label">Plants actifs</div>
+                        </div>
+                        <div class="card-icon">🌱</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">✅ Santé</div>
+                            <div class="card-value" id="healthyPlants">0</div>
+                            <div class="card-label">En bonne santé</div>
+                        </div>
+                        <div class="card-icon">🩺</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">⚠️ Attention</div>
+                            <div class="card-value" id="warningPlants">0</div>
+                            <div class="card-label">Nécessitent soins</div>
+                        </div>
+                        <div class="card-icon">🚨</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">📅 Âge Moyen</div>
+                            <div class="card-value" id="avgAge">0j</div>
+                            <div class="card-label">Depuis plantation</div>
+                        </div>
+                        <div class="card-icon">📆</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conditions -->
+            <div class="card" style="margin-bottom: 30px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.05) 100%);">
+                <h3 style="margin-bottom: 20px;">🌍 Conditions Actuelles</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                    <div style="text-align: center; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 12px;">
+                        <div style="font-size: 36px;">💧</div>
+                        <div style="font-size: 24px; font-weight: bold; color: var(--primary);" id="envHumiditeSol">--</div>
+                        <div style="color: var(--text-secondary);">Humidité Sol</div>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 12px;">
+                        <div style="font-size: 36px;">🌡️</div>
+                        <div style="font-size: 24px; font-weight: bold;" id="envTemperature">--</div>
+                        <div style="color: var(--text-secondary);">Température</div>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 12px;">
+                        <div style="font-size: 36px;">💨</div>
+                        <div style="font-size: 24px; font-weight: bold;" id="envHumiditeAir">--</div>
+                        <div style="color: var(--text-secondary);">Humidité Air</div>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 12px;">
+                        <div style="font-size: 36px;">🌧️</div>
+                        <div style="font-size: 24px; font-weight: bold;" id="envPluie">--</div>
+                        <div style="color: var(--text-secondary);">Pluie</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filtres -->
+            <div style="display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap;">
+                <select id="filterPlants" class="input-field" style="width: auto;" onchange="filterPlants()">
+                    <option value="all">Tous les plants</option>
+                    <option value="healthy">En bonne santé</option>
+                    <option value="warning">Attention</option>
+                    <option value="disease">Maladie</option>
+                </select>
+                <select id="sortPlants" class="input-field" style="width: auto;" onchange="sortPlants()">
+                    <option value="name">Nom</option>
+                    <option value="age">Âge</option>
+                    <option value="health">Santé</option>
+                    <option value="lastWatered">Dernier arrosage</option>
+                </select>
+            </div>
+
+            <!-- Liste Plants -->
+            <div id="plantsContainer"></div>
+
+            <!-- Message vide -->
+            <div id="noPlantsMessage" style="display: none;">
+                <div class="card" style="text-align: center; padding: 60px 20px;">
+                    <div style="font-size: 80px;">🍅</div>
+                    <h3 style="margin-bottom: 15px;">Aucun plant</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 25px;">
+                        Commencez à enregistrer vos plants
+                    </p>
+                    <button class="btn btn-primary" onclick="showAddPlantModal()">
+                        ➕ Ajouter plant
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================
+             PAGE 5: CONFIGURATION
+             ======================================== -->
+        <div id="configuration" class="page">
+            <div class="page-header">
+                <h1 class="page-title">⚙️ Configuration</h1>
+                <p class="page-subtitle">Paramètres du système</p>
+            </div>
+
+            <!-- Paramètres Arrosage -->
+            <div class="card" style="margin-bottom: 30px;">
+                <h2 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 32px;">💧</span>
+                    Paramètres d'Arrosage
+                </h2>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
+                    
+                    <!-- Durée -->
+                    <div class="form-group">
+                        <label for="configDureeArrosage">
+                            <span style="font-size: 18px; margin-right: 8px;">⏱️</span>
+                            Durée d'Arrosage
+                        </label>
+                        <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
+                            <input type="range" id="configDureeArrosage" min="1000" max="20000" step="1000" value="5000" style="flex: 1;">
+                            <span id="configDureeArrosageValue" style="min-width: 80px; font-weight: bold; color: var(--primary);">5s</span>
+                        </div>
+                        <small style="color: var(--text-secondary); display: block; margin-top: 8px;">
+                            Durée activation pompe (1-20s)
+                        </small>
+                    </div>
+
+                    <!-- Mode -->
+                    <div class="form-group">
+                        <label for="configModeDefaut">
+                            <span style="font-size: 18px; margin-right: 8px;">🎮</span>
+                            Mode par Défaut
+                        </label>
+                        <select id="configModeDefaut" style="margin-top: 10px;">
+                            <option value="automatique">🤖 Automatique</option>
+                            <option value="manuel">👆 Manuel</option>
+                            <option value="programme">⏰ Programmé</option>
+                        </select>
+                        <small style="color: var(--text-secondary); display: block; margin-top: 8px;">
+                            Mode au démarrage
+                        </small>
+                    </div>
+
+                    <!-- Heure -->
+                    <div class="form-group">
+                        <label for="configHeureArrosage">
+                            <span style="font-size: 18px; margin-right: 8px;">🕐</span>
+                            Heure Programmée
+                        </label>
+                        <div style="display: flex; gap: 10px; margin-top: 10px;">
+                            <input type="number" id="configHeureArrosage" min="0" max="23" value="7" style="width: 80px; text-align: center;">
+                            <span style="line-height: 40px; font-weight: bold;">:</span>
+                            <input type="number" id="configMinuteArrosage" min="0" max="59" step="15" value="0" style="width: 80px; text-align: center;">
+                        </div>
+                        <small style="color: var(--text-secondary); display: block; margin-top: 8px;">
+                            Heure programme auto (24h)
+                        </small>
+                    </div>
+
+                    <!-- Délai -->
+                    <div class="form-group">
+                        <label for="configDelaiMin">
+                            <span style="font-size: 18px; margin-right: 8px;">⏳</span>
+                            Délai Minimum
+                        </label>
+                        <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
+                            <input type="range" id="configDelaiMin" min="15" max="180" step="15" value="60" style="flex: 1;">
+                            <span id="configDelaiMinValue" style="min-width: 90px; font-weight: bold; color: var(--primary);">60 min</span>
+                        </div>
+                        <small style="color: var(--text-secondary); display: block; margin-top: 8px;">
+                            Entre deux arrosages auto
+                        </small>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Seuils -->
+            <div class="card" style="margin-bottom: 30px;">
+                <h2 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 32px;">⚠️</span>
+                    Seuils d'Alerte
+                </h2>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px;">
+                    
+                    <!-- Seuil Min -->
+                    <div class="form-group">
+                        <label for="configSeuilBas">
+                            <span style="font-size: 18px; margin-right: 8px;">📉</span>
+                            Humidité Minimum
+                        </label>
+                        <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
+                            <input type="range" id="configSeuilBas" min="15" max="45" step="5" value="30" style="flex: 1;">
+                            <span id="configSeuilBasValue" style="min-width: 60px; font-weight: bold; color: var(--danger);">30%</span>
+                        </div>
+                        <small style="color: var(--text-secondary); display: block; margin-top: 8px;">
+                            Déclenche arrosage auto
+                        </small>
+                    </div>
+
+                    <!-- Seuil Max -->
+                    <div class="form-group">
+                        <label for="configSeuilHaut">
+                            <span style="font-size: 18px; margin-right: 8px;">📈</span>
+                            Humidité Maximum
+                        </label>
+                        <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
+                            <input type="range" id="configSeuilHaut" min="55" max="85" step="5" value="70" style="flex: 1;">
+                            <span id="configSeuilHautValue" style="min-width: 60px; font-weight: bold; color: var(--info);">70%</span>
+                        </div>
+                        <small style="color: var(--text-secondary); display: block; margin-top: 8px;">
+                            Alerte excès d'eau
+                        </small>
+                    </div>
+
+                    <!-- Température -->
+                    <div class="form-group">
+                        <label for="configTempMax">
+                            <span style="font-size: 18px; margin-right: 8px;">🌡️</span>
+                            Température Critique
+                        </label>
+                        <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
+                            <input type="range" id="configTempMax" min="25" max="45" step="1" value="35" style="flex: 1;">
+                            <span id="configTempMaxValue" style="min-width: 60px; font-weight: bold; color: var(--warning);">35°C</span>
+                        </div>
+                        <small style="color: var(--text-secondary); display: block; margin-top: 8px;">
+                            Alerte température haute
+                        </small>
+                    </div>
+
+                </div>
+
+                <!-- Visualisation -->
+                <div style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 8px; margin-top: 20px;">
+                    <h3 style="margin-bottom: 15px; font-size: 16px;">📊 Zones Humidité</h3>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="width: 20px; height: 20px; background: var(--danger); border-radius: 4px;"></div>
+                            <span>0% - <span id="visualSeuilBas">30</span>% = 🚨 CRITIQUE</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="width: 20px; height: 20px; background: var(--warning); border-radius: 4px;"></div>
+                            <span><span id="visualSeuilBas2">30</span>% - 45% = ⚠️ Sec</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="width: 20px; height: 20px; background: var(--success); border-radius: 4px;"></div>
+                            <span>45% - <span id="visualSeuilHaut">70</span>% = ✅ OPTIMAL</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="width: 20px; height: 20px; background: var(--info); border-radius: 4px;"></div>
+                            <span><span id="visualSeuilHaut2">70</span>% - 100% = 💧 Humide</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Presets -->
+            <div class="card" style="margin-bottom: 30px;">
+                <h2 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 32px;">🎯</span>
+                    Configurations Prédéfinies
+                </h2>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                    <button class="btn btn-secondary" onclick="applyPresetConfig('mediterraneen')">
+                        <span style="font-size: 20px;">🌍</span>
+                        <span>Méditerranéen</span>
+                    </button>
+                    <button class="btn btn-secondary" onclick="applyPresetConfig('pots')">
+                        <span style="font-size: 20px;">🪴</span>
+                        <span>Plants en Pots</span>
+                    </button>
+                    <button class="btn btn-secondary" onclick="applyPresetConfig('economie')">
+                        <span style="font-size: 20px;">💧</span>
+                        <span>Économie d'Eau</span>
+                    </button>
+                    <button class="btn btn-secondary" onclick="applyPresetConfig('potager')">
+                        <span style="font-size: 20px;">🌿</span>
+                        <span>Plein Terre</span>
+                    </button>
+                    <button class="btn btn-secondary" onclick="applyPresetConfig('soir')">
+                        <span style="font-size: 20px;">🌙</span>
+                        <span>Arrosage Soir</span>
+                    </button>
+                    <button class="btn btn-secondary" onclick="applyPresetConfig('standard')">
+                        <span style="font-size: 20px;">⭐</span>
+                        <span>Standard</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                <button class="btn btn-primary" onclick="saveConfiguration()">
+                    <span style="font-size: 24px;">💾</span>
+                    <span>Enregistrer</span>
+                </button>
+                <button class="btn btn-secondary" onclick="resetConfiguration()">
+                    <span style="font-size: 24px;">🔄</span>
+                    <span>Réinitialiser</span>
+                </button>
+                <button class="btn btn-secondary" onclick="testConfiguration()">
+                    <span style="font-size: 24px;">🧪</span>
+                    <span>Tester</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ========================================
+             PAGE: SANTÉ DES PLANTES
+             ======================================== -->
+        <div id="health" class="page">
+            <div class="page-header">
+                <h1 class="page-title">🏥 Santé des Plantes</h1>
+                <p class="page-subtitle">Détection des maladies par intelligence artificielle</p>
+            </div>
+
+            <!-- Zone d'upload -->
+            <div class="upload-section">
+                <div class="upload-area" id="healthUploadArea">
+                    <div class="upload-icon">📸</div>
+                    <div class="upload-text">Cliquez ou glissez une photo de votre plante</div>
+                    <div class="upload-hint">Formats supportés: JPG, PNG, JPEG</div>
+                    <input type="file" id="healthFileInput" accept="image/*" style="display: none;">
+                </div>
+            </div>
+
+            <!-- Aperçu de l'image -->
+            <div id="healthPreviewContainer" class="preview-section" style="display: none;">
+                <h2 style="margin-bottom: 20px;">📷 Aperçu</h2>
+                <div class="image-preview-card">
+                    <img id="healthImagePreview" class="preview-image" alt="Aperçu">
+                    <button class="btn btn-primary btn-large" id="healthAnalyzeBtn">
+                        <span style="font-size: 24px;">🔍</span>
+                        <span>Analyser la plante</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Zone de chargement -->
+            <div id="healthLoading" class="loading-section" style="display: none;">
+                <div class="loading-spinner"></div>
+                <p style="margin-top: 20px; font-size: 18px;">🔬 Analyse en cours...</p>
+                <p style="color: var(--text-secondary); margin-top: 10px;">L'IA examine votre plante</p>
+            </div>
+
+            <!-- Résultats -->
+            <div id="healthResultsContainer" class="results-section" style="display: none;">
+                <h2 style="margin-bottom: 20px;">📊 Résultats de l'analyse</h2>
+                <div id="healthResultsContent"></div>
+            </div>
+
+            <!-- Historique des analyses -->
+            <div class="history-section">
+                <h2 style="margin-bottom: 20px;">📜 Historique des Analyses</h2>
+                <div id="healthHistory" class="history-grid">
+                    <div class="alert alert-info">
+                        <span style="font-size: 24px;">ℹ️</span>
+                        <div>
+                            <strong>Aucune analyse</strong>
+                            <p style="margin-top: 5px; color: var(--text-secondary);">
+                                Commencez par télécharger une photo de votre plante
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ============================================
+         MODALS
+         ============================================ -->
+    
+    <!-- Modal Ajout Plant -->
+    <div id="plantModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h2 id="modalTitle">➕ Ajouter un Plant</h2>
+                <button class="btn-close" onclick="closePlantModal()">✖️</button>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">🏷️ Nom</label>
+                <input type="text" id="plantName" class="input-field" placeholder="Ex: Tomate Cœur de Bœuf #1">
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">🍅 Variété</label>
+                <select id="plantVariety" class="input-field">
+                    <option value="Cœur de Bœuf">Cœur de Bœuf</option>
+                    <option value="Roma">Roma</option>
+                    <option value="Cherry">Cherry</option>
+                    <option value="Beefsteak">Beefsteak</option>
+                    <option value="San Marzano">San Marzano</option>
+                    <option value="Autre">Autre</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">📅 Date Plantation</label>
+                <input type="date" id="plantDate" class="input-field">
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">📍 Emplacement</label>
+                <input type="text" id="plantLocation" class="input-field" placeholder="Ex: Potager Zone A">
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">📝 Notes</label>
+                <textarea id="plantNotes" class="input-field" rows="3" placeholder="Observations..."></textarea>
+            </div>
+
+            <div style="display: flex; gap: 15px; margin-top: 30px;">
+                <button class="btn btn-primary" onclick="savePlant()" style="flex: 1;">💾 Enregistrer</button>
+                <button class="btn btn-secondary" onclick="closePlantModal()" style="flex: 1;">❌ Annuler</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Détails Plant -->
+    <div id="plantDetailsModal" class="modal" style="display: none;">
+        <div class="modal-content modal-large">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h2 id="detailsPlantName">🍅 Détails</h2>
+                <button class="btn-close" onclick="closePlantDetailsModal()">✖️</button>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
+                <div>
+                    <h3 style="margin-bottom: 15px;">📋 Informations</h3>
+                    <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px;">
+                        <div style="margin-bottom: 15px;">
+                            <span style="color: var(--text-secondary);">Variété:</span>
+                            <strong style="float: right;" id="detailsVariety">--</strong>
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <span style="color: var(--text-secondary);">Plantation:</span>
+                            <strong style="float: right;" id="detailsPlantDate">--</strong>
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <span style="color: var(--text-secondary);">Âge:</span>
+                            <strong style="float: right;" id="detailsAge">--</strong>
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <span style="color: var(--text-secondary);">Emplacement:</span>
+                            <strong style="float: right;" id="detailsLocation">--</strong>
+                        </div>
+                        <div>
+                            <span style="color: var(--text-secondary);">État:</span>
+                            <span style="float: right;" id="detailsStatus">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 style="margin-bottom: 15px;">📊 Statistiques</h3>
+                    <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px;">
+                        <div style="margin-bottom: 15px;">
+                            <span style="color: var(--text-secondary);">Score Santé:</span>
+                            <strong style="float: right;" id="detailsHealth">--</strong>
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <span style="color: var(--text-secondary);">Arrosages:</span>
+                            <strong style="float: right;" id="detailsWaterCount">--</strong>
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <span style="color: var(--text-secondary);">Dernier arrosage:</span>
+                            <strong style="float: right;" id="detailsLastWater">--</strong>
+                        </div>
+                        <div>
+                            <span style="color: var(--text-secondary);">Analyses IA:</span>
+                            <strong style="float: right;" id="detailsAIScans">--</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 30px;">
+                <h3 style="margin-bottom: 15px;">📝 Notes</h3>
+                <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px;">
+                    <p id="detailsNotes" style="color: var(--text-secondary);">--</p>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                <button class="btn btn-primary" onclick="waterPlantFromDetails()">💧 Arroser</button>
+                <button class="btn btn-secondary" onclick="scanPlantFromDetails()">📸 Scanner IA</button>
+                <button class="btn btn-secondary" onclick="editPlantFromDetails()">✏️ Modifier</button>
+                <button class="btn btn-danger" onclick="deletePlantFromDetails()">🗑️ Supprimer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         SCRIPTS
+         ============================================ -->
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+    <script src="plants-module.js"></script>
+    <script src="configuration-module.js"></script>
+    <script src="health-module.js"></script>
+</body>
+</html>

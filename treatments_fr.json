@@ -1,0 +1,58 @@
+{
+  "Powdery Mildew": {
+    "treatment": "Fongicide à base de soufre (1-2 g/L) ou bicarbonate de sodium (5 g/L). Pulvériser tôt le matin ou en soirée. Répéter tous les 7-10 jours.",
+    "notes": "Améliorer la circulation d'air entre les plants. Éviter l'arrosage par aspersion."
+  },
+  "Downy Mildew": {
+    "treatment": "Bouillie bordelaise (10-20 g/L) en prévention. Fongicides à base de cuivre. Application tous les 10-14 jours selon météo.",
+    "notes": "Éliminer les feuilles infectées. Espacer les plants pour réduire l'humidité."
+  },
+  "Early Blight": {
+    "treatment": "Chlorothalonil ou mancozèbe (suivre dosage fabricant). Rotation des cultures. Retirer les feuilles atteintes.",
+    "notes": "Ne pas mouiller le feuillage lors de l'arrosage. Pailler le sol."
+  },
+  "Late Blight": {
+    "treatment": "Bouillie bordelaise (20 g/L) en préventif. En curatif : fongicides systémiques (azoxystrobine). Retirer immédiatement les parties infectées.",
+    "notes": "Surveiller en période humide et fraîche. Détruire les plants gravement atteints."
+  },
+  "Leaf Spot": {
+    "treatment": "Fongicides à base de cuivre (bouillie bordelaise 10 g/L). Retirer et détruire les feuilles malades. Traiter tous les 10-14 jours.",
+    "notes": "Éviter l'arrosage par aspersion. Désinfecter les outils de taille."
+  },
+  "Bacterial Spot": {
+    "treatment": "Cuivre fixé (hydroxyde de cuivre 1-2 g/L) en préventif. Pas de traitement curatif efficace. Rotation des cultures sur 3 ans minimum.",
+    "notes": "Utiliser des semences certifiées. Éliminer les plants infectés."
+  },
+  "Rust": {
+    "treatment": "Soufre mouillable (2-3 g/L) ou triazoles (myclobutanil). Application dès apparition des premiers symptômes. Répéter tous les 7-14 jours.",
+    "notes": "Éliminer les feuilles atteintes. Favoriser la circulation d'air."
+  },
+  "Anthracnose": {
+    "treatment": "Fongicides à base de cuivre ou chlorothalonil. Rotation des cultures. Éviter les blessures mécaniques des fruits.",
+    "notes": "Récolter les fruits mûrs rapidement. Nettoyer les débris végétaux."
+  },
+  "Septoria Leaf Spot": {
+    "treatment": "Chlorothalonil (1.5-2 g/L) ou mancozèbe. Commencer en préventif. Traiter toutes les 7-10 jours.",
+    "notes": "Tailler les branches basses. Pailler pour éviter les éclaboussures."
+  },
+  "Black Rot": {
+    "treatment": "Fongicides à base de cuivre ou mancozèbe. Retirer et brûler les parties infectées. Rotation sur 2-3 ans.",
+    "notes": "Désinfecter les outils. Espacer les plants pour aération."
+  },
+  "Fusarium Wilt": {
+    "treatment": "Pas de traitement chimique efficace. Variétés résistantes. Solarisation du sol (bâche plastique 4-6 semaines en été). Rotation longue.",
+    "notes": "Éviter les stress hydriques. pH neutre à légèrement acide."
+  },
+  "Verticillium Wilt": {
+    "treatment": "Aucun traitement curatif. Utiliser variétés résistantes. Rotation 4-5 ans. Solarisation du sol possible.",
+    "notes": "Arracher et détruire les plants infectés. Ne pas composter."
+  },
+  "Mosaic Virus": {
+    "treatment": "Aucun traitement. Éliminer immédiatement les plants infectés. Lutter contre les pucerons vecteurs (savon noir, huiles essentielles).",
+    "notes": "Utiliser des plants certifiés. Désinfecter les mains et outils."
+  },
+  "Leaf Curl": {
+    "treatment": "Bouillie bordelaise (15-20 g/L) en automne après chute des feuilles et au printemps avant débourrement. 2-3 traitements préventifs.",
+    "notes": "Éliminer et brûler les feuilles atteintes. Favoriser la vigueur des arbres."
+  }
+}
