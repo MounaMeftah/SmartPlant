@@ -5,7 +5,7 @@
 
 const EMAILJS_CONFIG = {
     // ⚠️ REMPLACE CES VALEURS PAR TES PROPRES IDENTIFIANTS EMAILJS
-    publicKey: 'YCDN3p6l0QoJvNWnI0',  // Ton Public Key EmailJS
+    publicKey: 'CDN3p6l0QoJvNWnI0',  // Ton Public Key EmailJS
     serviceID: 'service_9zpnxfx',           // Ton Service ID
     templateID: 'template_q8nwry2',      // Ton Template ID
     
