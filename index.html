@@ -822,20 +822,19 @@
         </div>
     </div>
 
-    <!-- ============================================
-         SCRIPTS - ORDRE IMPORTANT
-         ============================================ -->
-    
-    <!-- 1. Configuration EmailJS (CHARGER EN PREMIER) -->
+    <!-- 1. EmailJS SDK - EN PREMIER -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <!-- 2. Configuration EmailJS - EN SECOND -->
     <script src="emailjs-config.js"></script>
-    
-    <!-- 2. Configuration générale -->
+
+    <!-- 3. Configuration générale -->
     <script src="config.js"></script>
-    
-    <!-- 3. Script principal avec notifications email -->
+
+    <!-- 4. Script principal -->
     <script src="script.js"></script>
-    
-    <!-- 4. Modules additionnels -->
+
+    <!-- 5. Modules additionnels -->
     <script src="plants-module.js"></script>
     <script src="configuration-module.js"></script>
     <script src="health-module.js"></script>
