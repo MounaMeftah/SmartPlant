@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🌿</text></svg>">
-    <title>SmartPlant</title>
+    <title>SmartPlant - Système de Surveillance Intelligent</title>
     
     <!-- Styles CSS -->
     <link rel="stylesheet" href="style.css">
@@ -19,6 +19,9 @@
     <!-- TensorFlow.js & Teachable Machine -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.7.4/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.4/dist/teachablemachine-image.min.js"></script>
+    
+    <!-- 📧 EmailJS SDK - Notifications par Email -->
+    <script type="text/javascript" src="https://cdn.emailjs.com/sdk/3.2.0/email.min.js"></script>
 </head>
 <body>
     <!-- ============================================
@@ -574,222 +577,7 @@
         </div>
 
         <!-- ========================================
-             PAGE 5: CONFIGURATION
-             ======================================== -->
-        <div id="configuration" class="page">
-            <div class="page-header">
-                <h1 class="page-title">⚙️ Configuration</h1>
-                <p class="page-subtitle">Paramètres du système</p>
-            </div>
-
-            <!-- Paramètres Arrosage -->
-            <div class="card" style="margin-bottom: 30px;">
-                <h2 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
-                    <span style="font-size: 32px;">💧</span>
-                    Paramètres d'Arrosage
-                </h2>
-
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
-                    
-                    <!-- Durée -->
-                    <div class="form-group">
-                        <label for="configDureeArrosage">
-                            <span style="font-size: 18px; margin-right: 8px;">⏱️</span>
-                            Durée d'Arrosage
-                        </label>
-                        <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
-                            <input type="range" id="configDureeArrosage" min="1000" max="20000" step="1000" value="5000" style="flex: 1;">
-                            <span id="configDureeArrosageValue" style="min-width: 80px; font-weight: bold; color: var(--primary);">5s</span>
-                        </div>
-                        <small style="color: var(--text-secondary); display: block; margin-top: 8px;">
-                            Durée activation pompe (1-20s)
-                        </small>
-                    </div>
-
-                    <!-- Mode -->
-                    <div class="form-group">
-                        <label for="configModeDefaut">
-                            <span style="font-size: 18px; margin-right: 8px;">🎮</span>
-                            Mode par Défaut
-                        </label>
-                        <select id="configModeDefaut" style="margin-top: 10px;">
-                            <option value="automatique">🤖 Automatique</option>
-                            <option value="manuel">👆 Manuel</option>
-                            <option value="programme">⏰ Programmé</option>
-                        </select>
-                        <small style="color: var(--text-secondary); display: block; margin-top: 8px;">
-                            Mode au démarrage
-                        </small>
-                    </div>
-
-                    <!-- Heure -->
-                    <div class="form-group">
-                        <label for="configHeureArrosage">
-                            <span style="font-size: 18px; margin-right: 8px;">🕐</span>
-                            Heure Programmée
-                        </label>
-                        <div style="display: flex; gap: 10px; margin-top: 10px;">
-                            <input type="number" id="configHeureArrosage" min="0" max="23" value="7" style="width: 80px; text-align: center;">
-                            <span style="line-height: 40px; font-weight: bold;">:</span>
-                            <input type="number" id="configMinuteArrosage" min="0" max="59" step="15" value="0" style="width: 80px; text-align: center;">
-                        </div>
-                        <small style="color: var(--text-secondary); display: block; margin-top: 8px;">
-                            Heure programme auto (24h)
-                        </small>
-                    </div>
-
-                    <!-- Délai -->
-                    <div class="form-group">
-                        <label for="configDelaiMin">
-                            <span style="font-size: 18px; margin-right: 8px;">⏳</span>
-                            Délai Minimum
-                        </label>
-                        <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
-                            <input type="range" id="configDelaiMin" min="15" max="180" step="15" value="60" style="flex: 1;">
-                            <span id="configDelaiMinValue" style="min-width: 90px; font-weight: bold; color: var(--primary);">60 min</span>
-                        </div>
-                        <small style="color: var(--text-secondary); display: block; margin-top: 8px;">
-                            Entre deux arrosages auto
-                        </small>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- Seuils -->
-            <div class="card" style="margin-bottom: 30px;">
-                <h2 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
-                    <span style="font-size: 32px;">⚠️</span>
-                    Seuils d'Alerte
-                </h2>
-
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px;">
-                    
-                    <!-- Seuil Min -->
-                    <div class="form-group">
-                        <label for="configSeuilBas">
-                            <span style="font-size: 18px; margin-right: 8px;">📉</span>
-                            Humidité Minimum
-                        </label>
-                        <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
-                            <input type="range" id="configSeuilBas" min="15" max="45" step="5" value="30" style="flex: 1;">
-                            <span id="configSeuilBasValue" style="min-width: 60px; font-weight: bold; color: var(--danger);">30%</span>
-                        </div>
-                        <small style="color: var(--text-secondary); display: block; margin-top: 8px;">
-                            Déclenche arrosage auto
-                        </small>
-                    </div>
-
-                    <!-- Seuil Max -->
-                    <div class="form-group">
-                        <label for="configSeuilHaut">
-                            <span style="font-size: 18px; margin-right: 8px;">📈</span>
-                            Humidité Maximum
-                        </label>
-                        <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
-                            <input type="range" id="configSeuilHaut" min="55" max="85" step="5" value="70" style="flex: 1;">
-                            <span id="configSeuilHautValue" style="min-width: 60px; font-weight: bold; color: var(--info);">70%</span>
-                        </div>
-                        <small style="color: var(--text-secondary); display: block; margin-top: 8px;">
-                            Alerte excès d'eau
-                        </small>
-                    </div>
-
-                    <!-- Température -->
-                    <div class="form-group">
-                        <label for="configTempMax">
-                            <span style="font-size: 18px; margin-right: 8px;">🌡️</span>
-                            Température Critique
-                        </label>
-                        <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
-                            <input type="range" id="configTempMax" min="25" max="45" step="1" value="35" style="flex: 1;">
-                            <span id="configTempMaxValue" style="min-width: 60px; font-weight: bold; color: var(--warning);">35°C</span>
-                        </div>
-                        <small style="color: var(--text-secondary); display: block; margin-top: 8px;">
-                            Alerte température haute
-                        </small>
-                    </div>
-
-                </div>
-
-                <!-- Visualisation -->
-                <div style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 8px; margin-top: 20px;">
-                    <h3 style="margin-bottom: 15px; font-size: 16px;">📊 Zones Humidité</h3>
-                    <div style="display: flex; flex-direction: column; gap: 10px;">
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <div style="width: 20px; height: 20px; background: var(--danger); border-radius: 4px;"></div>
-                            <span>0% - <span id="visualSeuilBas">30</span>% = 🚨 CRITIQUE</span>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <div style="width: 20px; height: 20px; background: var(--warning); border-radius: 4px;"></div>
-                            <span><span id="visualSeuilBas2">30</span>% - 45% = ⚠️ Sec</span>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <div style="width: 20px; height: 20px; background: var(--success); border-radius: 4px;"></div>
-                            <span>45% - <span id="visualSeuilHaut">70</span>% = ✅ OPTIMAL</span>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <div style="width: 20px; height: 20px; background: var(--info); border-radius: 4px;"></div>
-                            <span><span id="visualSeuilHaut2">70</span>% - 100% = 💧 Humide</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Presets -->
-            <div class="card" style="margin-bottom: 30px;">
-                <h2 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
-                    <span style="font-size: 32px;">🎯</span>
-                    Configurations Prédéfinies
-                </h2>
-
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
-                    <button class="btn btn-secondary" onclick="applyPresetConfig('mediterraneen')">
-                        <span style="font-size: 20px;">🌍</span>
-                        <span>Méditerranéen</span>
-                    </button>
-                    <button class="btn btn-secondary" onclick="applyPresetConfig('pots')">
-                        <span style="font-size: 20px;">🪴</span>
-                        <span>Plants en Pots</span>
-                    </button>
-                    <button class="btn btn-secondary" onclick="applyPresetConfig('economie')">
-                        <span style="font-size: 20px;">💧</span>
-                        <span>Économie d'Eau</span>
-                    </button>
-                    <button class="btn btn-secondary" onclick="applyPresetConfig('potager')">
-                        <span style="font-size: 20px;">🌿</span>
-                        <span>Plein Terre</span>
-                    </button>
-                    <button class="btn btn-secondary" onclick="applyPresetConfig('soir')">
-                        <span style="font-size: 20px;">🌙</span>
-                        <span>Arrosage Soir</span>
-                    </button>
-                    <button class="btn btn-secondary" onclick="applyPresetConfig('standard')">
-                        <span style="font-size: 20px;">⭐</span>
-                        <span>Standard</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Actions -->
-            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                <button class="btn btn-primary" onclick="saveConfiguration()">
-                    <span style="font-size: 24px;">💾</span>
-                    <span>Enregistrer</span>
-                </button>
-                <button class="btn btn-secondary" onclick="resetConfiguration()">
-                    <span style="font-size: 24px;">🔄</span>
-                    <span>Réinitialiser</span>
-                </button>
-                <button class="btn btn-secondary" onclick="testConfiguration()">
-                    <span style="font-size: 24px;">🧪</span>
-                    <span>Tester</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- ========================================
-             PAGE: SANTÉ DES PLANTES
+             PAGE 5: SANTÉ DES PLANTES
              ======================================== -->
         <div id="health" class="page">
             <div class="page-header">
@@ -849,6 +637,138 @@
             </div>
         </div>
 
+        <!-- ========================================
+             PAGE 6: CONFIGURATION
+             ======================================== -->
+        <div id="configuration" class="page">
+            <div class="page-header">
+                <h1 class="page-title">⚙️ Configuration</h1>
+                <p class="page-subtitle">Paramètres du système</p>
+            </div>
+
+            <!-- Paramètres Arrosage -->
+            <div class="card" style="margin-bottom: 30px;">
+                <h2 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 32px;">💧</span>
+                    Paramètres d'Arrosage
+                </h2>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
+                    <div class="form-group">
+                        <label for="seuilMin">
+                            <span style="font-size: 18px; margin-right: 8px;">📉</span>
+                            Seuil Minimum (%)
+                        </label>
+                        <input type="number" class="input-field" id="seuilMin" value="30" min="0" max="100">
+                        <small style="color: var(--text-secondary); display: block; margin-top: 8px;">
+                            Déclenche l'arrosage automatique
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="seuilMax">
+                            <span style="font-size: 18px; margin-right: 8px;">📈</span>
+                            Seuil Maximum (%)
+                        </label>
+                        <input type="number" class="input-field" id="seuilMax" value="70" min="0" max="100">
+                        <small style="color: var(--text-secondary); display: block; margin-top: 8px;">
+                            Alerte si trop d'eau
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tempMax">
+                            <span style="font-size: 18px; margin-right: 8px;">🌡️</span>
+                            Température Max (°C)
+                        </label>
+                        <input type="number" class="input-field" id="tempMax" value="35" min="0" max="50">
+                        <small style="color: var(--text-secondary); display: block; margin-top: 8px;">
+                            Alerte température haute
+                        </small>
+                    </div>
+                </div>
+
+                <div style="margin-top: 25px;">
+                    <button class="btn btn-primary" onclick="saveThresholds()">
+                        💾 Enregistrer les Seuils
+                    </button>
+                </div>
+            </div>
+
+            <!-- Notifications Email -->
+            <div class="card" style="margin-bottom: 30px; border: 2px solid var(--primary);">
+                <h2 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 32px;">📧</span>
+                    Notifications par Email
+                </h2>
+
+                <div class="alert alert-info" style="margin-bottom: 20px;">
+                    <span style="font-size: 24px;">ℹ️</span>
+                    <div>
+                        <strong>Système de Notifications Actif</strong>
+                        <p style="margin-top: 5px; color: var(--text-secondary);">
+                            Vous recevrez des emails pour les alertes critiques (sol sec, température extrême, maladies)
+                        </p>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                    <div style="padding: 15px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; border-left: 4px solid var(--success);">
+                        <div style="font-size: 24px; margin-bottom: 8px;">🚨</div>
+                        <strong>Sol Critique</strong>
+                        <p style="font-size: 13px; color: var(--text-secondary); margin-top: 5px;">
+                            Alerte si humidité < 20%
+                        </p>
+                    </div>
+                    <div style="padding: 15px; background: rgba(245, 158, 11, 0.1); border-radius: 8px; border-left: 4px solid var(--warning);">
+                        <div style="font-size: 24px; margin-bottom: 8px;">⚠️</div>
+                        <strong>Sol Sec</strong>
+                        <p style="font-size: 13px; color: var(--text-secondary); margin-top: 5px;">
+                            Alerte si humidité < seuil min
+                        </p>
+                    </div>
+                    <div style="padding: 15px; background: rgba(245, 158, 11, 0.1); border-radius: 8px; border-left: 4px solid var(--warning);">
+                        <div style="font-size: 24px; margin-bottom: 8px;">🌡️</div>
+                        <strong>Température</strong>
+                        <p style="font-size: 13px; color: var(--text-secondary); margin-top: 5px;">
+                            Alerte si < 10°C ou > 35°C
+                        </p>
+                    </div>
+                    <div style="padding: 15px; background: rgba(239, 68, 68, 0.1); border-radius: 8px; border-left: 4px solid var(--danger);">
+                        <div style="font-size: 24px; margin-bottom: 8px;">🩺</div>
+                        <strong>Maladie</strong>
+                        <p style="font-size: 13px; color: var(--text-secondary); margin-top: 5px;">
+                            Alerte si maladie détectée
+                        </p>
+                    </div>
+                </div>
+
+                <p style="font-size: 13px; color: var(--text-secondary);">
+                    💡 <strong>Note:</strong> Les emails sont envoyés avec un délai minimum de 30 minutes entre chaque notification du même type pour éviter le spam.
+                </p>
+            </div>
+
+            <!-- Export Données -->
+            <div class="card">
+                <h2 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 32px;">📥</span>
+                    Export des Données
+                </h2>
+
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <button class="btn btn-secondary" onclick="exportData('csv')">
+                        📄 Export CSV
+                    </button>
+                    <button class="btn btn-secondary" onclick="exportData('json')">
+                        📊 Export JSON
+                    </button>
+                    <button class="btn btn-secondary" onclick="exportData('pdf')">
+                        📑 Export PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- ============================================
@@ -902,85 +822,20 @@
         </div>
     </div>
 
-    <!-- Modal Détails Plant -->
-    <div id="plantDetailsModal" class="modal" style="display: none;">
-        <div class="modal-content modal-large">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                <h2 id="detailsPlantName">🍅 Détails</h2>
-                <button class="btn-close" onclick="closePlantDetailsModal()">✖️</button>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
-                <div>
-                    <h3 style="margin-bottom: 15px;">📋 Informations</h3>
-                    <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px;">
-                        <div style="margin-bottom: 15px;">
-                            <span style="color: var(--text-secondary);">Variété:</span>
-                            <strong style="float: right;" id="detailsVariety">--</strong>
-                        </div>
-                        <div style="margin-bottom: 15px;">
-                            <span style="color: var(--text-secondary);">Plantation:</span>
-                            <strong style="float: right;" id="detailsPlantDate">--</strong>
-                        </div>
-                        <div style="margin-bottom: 15px;">
-                            <span style="color: var(--text-secondary);">Âge:</span>
-                            <strong style="float: right;" id="detailsAge">--</strong>
-                        </div>
-                        <div style="margin-bottom: 15px;">
-                            <span style="color: var(--text-secondary);">Emplacement:</span>
-                            <strong style="float: right;" id="detailsLocation">--</strong>
-                        </div>
-                        <div>
-                            <span style="color: var(--text-secondary);">État:</span>
-                            <span style="float: right;" id="detailsStatus">--</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <h3 style="margin-bottom: 15px;">📊 Statistiques</h3>
-                    <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px;">
-                        <div style="margin-bottom: 15px;">
-                            <span style="color: var(--text-secondary);">Score Santé:</span>
-                            <strong style="float: right;" id="detailsHealth">--</strong>
-                        </div>
-                        <div style="margin-bottom: 15px;">
-                            <span style="color: var(--text-secondary);">Arrosages:</span>
-                            <strong style="float: right;" id="detailsWaterCount">--</strong>
-                        </div>
-                        <div style="margin-bottom: 15px;">
-                            <span style="color: var(--text-secondary);">Dernier arrosage:</span>
-                            <strong style="float: right;" id="detailsLastWater">--</strong>
-                        </div>
-                        <div>
-                            <span style="color: var(--text-secondary);">Analyses IA:</span>
-                            <strong style="float: right;" id="detailsAIScans">--</strong>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div style="margin-bottom: 30px;">
-                <h3 style="margin-bottom: 15px;">📝 Notes</h3>
-                <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px;">
-                    <p id="detailsNotes" style="color: var(--text-secondary);">--</p>
-                </div>
-            </div>
-
-            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                <button class="btn btn-primary" onclick="waterPlantFromDetails()">💧 Arroser</button>
-                <button class="btn btn-secondary" onclick="scanPlantFromDetails()">📸 Scanner IA</button>
-                <button class="btn btn-secondary" onclick="editPlantFromDetails()">✏️ Modifier</button>
-                <button class="btn btn-danger" onclick="deletePlantFromDetails()">🗑️ Supprimer</button>
-            </div>
-        </div>
-    </div>
-
     <!-- ============================================
-         SCRIPTS
+         SCRIPTS - ORDRE IMPORTANT
          ============================================ -->
+    
+    <!-- 1. Configuration EmailJS (CHARGER EN PREMIER) -->
+    <script src="emailjs-config.js"></script>
+    
+    <!-- 2. Configuration générale -->
     <script src="config.js"></script>
+    
+    <!-- 3. Script principal avec notifications email -->
     <script src="script.js"></script>
+    
+    <!-- 4. Modules additionnels -->
     <script src="plants-module.js"></script>
     <script src="configuration-module.js"></script>
     <script src="health-module.js"></script>

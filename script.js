@@ -1,30 +1,24 @@
 /* ============================================
    SMARTPLANT DASHBOARD - JAVASCRIPT COMPLET
-   Version avec 3 modes d'arrosage : Automatique, Manuel, Programmé
-   Sans la page Santé & IA dédiée
+   Version avec 3 modes d'arrosage + Notifications Email
    ============================================ */
 
 // ============================================
 // CONFIGURATION
 // ============================================
-const ROBOFLOW_PUBLISHABLE_KEY = "rf_kw1r2TticSP3SoDsARINZDjrnYk2"; // ta clé publishable
-const ROBOFLOW_MODEL_NAME = "plant-disease-classification"; // adapte si besoin
-const ROBOFLOW_MODEL_VERSION = "1"; // version du modèle
+const ROBOFLOW_PUBLISHABLE_KEY = "rf_kw1r2TticSP3SoDsARINZDjrnYk2";
+const ROBOFLOW_MODEL_NAME = "plant-disease-classification";
+const ROBOFLOW_MODEL_VERSION = "1";
 
-// URL principale utilisée par les fonctions
 const ROBOFLOW_API_URL = `https://detect.roboflow.com/${ROBOFLOW_MODEL_NAME}/${ROBOFLOW_MODEL_VERSION}?api_key=${ROBOFLOW_PUBLISHABLE_KEY}`;
-
-// Aliases (pour couvrir les variantes de nommage rencontrées)
 const ROBofLOW_API_URL = ROBOFLOW_API_URL;
 const ROBoflow_API_URL = ROBOFLOW_API_URL;
 
-// Expose aussi sur window (au cas où le code inline l'attendrait)
 if (typeof window !== 'undefined') {
   window.ROBOFLOW_API_URL = ROBOFLOW_API_URL;
   window.ROBofLOW_API_URL = ROBOFLOW_API_URL;
   window.ROBoflow_API_URL = ROBOFLOW_API_URL;
 }
-
 
 const CONFIG = {
     weatherLatitude: 35.5047,
@@ -737,7 +731,7 @@ function changeTimeRange(range) {
 }
 
 // ============================================
-// CALCUL SANTÉ GLOBALE
+// CALCUL SANTÉ GLOBALE + NOTIFICATIONS EMAIL
 // ============================================
 function calculateGlobalHealth() {
     const capteurs = firebaseData.capteurs || {};
@@ -752,18 +746,52 @@ function calculateGlobalHealth() {
     // Vérification humidité sol
     if (capteurs.humiditeSol < 20) {
         score -= 30;
-        issues.push({ 
+        const issue = { 
             type: 'danger', 
             message: '🚨 Sol TRÈS sec - CRITIQUE !', 
             detail: `Humidité: ${capteurs.humiditeSol}% (Seuil critique: 20%)` 
-        });
+        };
+        issues.push(issue);
+        
+        // 📧 Envoyer email pour alerte critique
+        if (typeof createAndSendAlert === 'function') {
+            createAndSendAlert(
+                'soilCritical',
+                'danger',
+                '🚨 Sol TRÈS SEC - Action Immédiate Requise',
+                `L'humidité du sol est à ${capteurs.humiditeSol}%, en dessous du seuil critique de 20%. Vos plantes sont en danger !`
+            ).then(result => {
+                if (result.success) {
+                    console.log('✅ Email alerte critique envoyé');
+                }
+            }).catch(err => {
+                console.warn('⚠️ Erreur envoi email:', err);
+            });
+        }
     } else if (capteurs.humiditeSol < seuilMin) {
         score -= 20;
-        issues.push({ 
+        const issue = { 
             type: 'warning', 
             message: '⚠️ Sol sec - Arrosage recommandé', 
             detail: `Humidité: ${capteurs.humiditeSol}% (Seuil min: ${seuilMin}%)` 
-        });
+        };
+        issues.push(issue);
+        
+        // 📧 Envoyer email pour sol sec
+        if (typeof createAndSendAlert === 'function') {
+            createAndSendAlert(
+                'soilDry',
+                'warning',
+                '⚠️ Sol Sec - Arrosage Recommandé',
+                `L'humidité du sol est à ${capteurs.humiditeSol}%, en dessous du seuil minimum de ${seuilMin}%. Un arrosage est recommandé.`
+            ).then(result => {
+                if (result.success) {
+                    console.log('✅ Email alerte sol sec envoyé');
+                }
+            }).catch(err => {
+                console.warn('⚠️ Erreur envoi email:', err);
+            });
+        }
     } else if (capteurs.humiditeSol > seuilMax) {
         score -= 10;
         issues.push({ 
@@ -776,11 +804,28 @@ function calculateGlobalHealth() {
     // Vérification température
     if (capteurs.temperature < 10 || capteurs.temperature > 35) {
         score -= 15;
-        issues.push({ 
+        const issue = { 
             type: 'warning', 
             message: '🌡️ Température extrême', 
             detail: `Température: ${capteurs.temperature.toFixed(1)}°C` 
-        });
+        };
+        issues.push(issue);
+        
+        // 📧 Envoyer email pour température extrême
+        if (typeof createAndSendAlert === 'function') {
+            createAndSendAlert(
+                'temperatureExtreme',
+                'warning',
+                '🌡️ Température Extrême Détectée',
+                `La température est à ${capteurs.temperature.toFixed(1)}°C, en dehors de la plage optimale (10-35°C). Vos plantes pourraient être stressées.`
+            ).then(result => {
+                if (result.success) {
+                    console.log('✅ Email alerte température envoyé');
+                }
+            }).catch(err => {
+                console.warn('⚠️ Erreur envoi email:', err);
+            });
+        }
     }
     
     // Vérification humidité air
@@ -796,11 +841,29 @@ function calculateGlobalHealth() {
     // Vérification maladies
     if (systeme.maladieDetectee) {
         score -= 30;
-        issues.push({ 
+        const typeMaladie = systeme.typeMaladie || 'Type inconnu - Vérification recommandée';
+        const issue = { 
             type: 'danger', 
             message: '🩺 Maladie détectée !', 
-            detail: systeme.typeMaladie || 'Type inconnu - Vérification recommandée' 
-        });
+            detail: typeMaladie
+        };
+        issues.push(issue);
+        
+        // 📧 Envoyer email pour maladie détectée
+        if (typeof createAndSendAlert === 'function') {
+            createAndSendAlert(
+                'diseaseDetected',
+                'danger',
+                '🩺 Maladie Détectée sur Vos Plantes',
+                `Une maladie a été détectée par l'IA : ${typeMaladie}. Une intervention rapide est recommandée pour éviter la propagation.`
+            ).then(result => {
+                if (result.success) {
+                    console.log('✅ Email alerte maladie envoyé');
+                }
+            }).catch(err => {
+                console.warn('⚠️ Erreur envoi email:', err);
+            });
+        }
     }
     
     score = Math.max(0, Math.min(100, score));
@@ -1372,16 +1435,11 @@ function exportData(format) {
 }
 
 // ============================================
-// ANALYSE D'IMAGE - Utilisée pour scanner les plants
+// ANALYSE D'IMAGE - Roboflow
 // ============================================
-/**
- * Envoi et lecture réponse Roboflow (avec timeout et retour structuré)
- * @param {File} file
- * @returns {Object} { ok: boolean, status, body, error }
- */
 async function analyzeWithRoboflow(file) {
   const controller = new AbortController();
-  const timeoutMs = 20000; // 20s
+  const timeoutMs = 20000;
   const t = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
@@ -1398,7 +1456,6 @@ async function analyzeWithRoboflow(file) {
 
     clearTimeout(t);
 
-    // Toujours lire le corps pour debug, même si erreur HTTP
     const text = await res.text();
     let json = null;
     try { json = JSON.parse(text); } catch(e) { /* non JSON */ }
@@ -1419,10 +1476,6 @@ async function analyzeWithRoboflow(file) {
   }
 }
 
-/**
- * Analyse d'image (appelée depuis les modules plants pour scanner les maladies)
- * Cette fonction est conservée car elle est utilisée dans la page "Mes Plantes"
- */
 async function analyzeImage(files) {
   if (!files || files.length === 0) return;
   console.log('📸 Analyse image (Roboflow) ...');
@@ -1474,7 +1527,6 @@ async function analyzeImage(files) {
   }
 }
 
-// helper safe
 function escapeHtml(s) {
   if (!s) return '';
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
@@ -1483,8 +1535,6 @@ function escapeHtml(s) {
 // ============================================
 // GESTION DES PLANTES
 // ============================================
-
-// Fonction pour mettre à jour l'affichage des conditions environnementales
 function updateEnvironmentDisplay() {
     if (!database) return;
     
@@ -1493,7 +1543,6 @@ function updateEnvironmentDisplay() {
             const capteurs = snapshot.val();
             if (!capteurs) return;
             
-            // Mettre à jour les valeurs dans la page Mes Plantes
             const envHumiditeSol = document.getElementById('envHumiditeSol');
             const envTemperature = document.getElementById('envTemperature');
             const envHumiditeAir = document.getElementById('envHumiditeAir');
@@ -1527,7 +1576,6 @@ function loadPlantsFromFirebase() {
     
     console.log('🌱 Chargement des plantes depuis Firebase...');
     
-    // Charger aussi les conditions environnementales
     updateEnvironmentDisplay();
     
     const plantsRef = database.ref('plants');
@@ -1554,7 +1602,6 @@ function loadPlantsFromFirebase() {
                     </div>
                 `;
                 
-                // Mettre à jour les statistiques
                 document.getElementById('totalPlants').textContent = '0';
                 document.getElementById('healthyPlants').textContent = '0';
                 document.getElementById('warningPlants').textContent = '0';
@@ -1562,13 +1609,11 @@ function loadPlantsFromFirebase() {
                 return;
             }
             
-            // Calculer les statistiques
             const plantsArray = Object.values(plants);
             const totalPlants = plantsArray.length;
             const healthyPlants = plantsArray.filter(p => !p.diseaseDetected).length;
             const warningPlants = plantsArray.filter(p => p.diseaseDetected).length;
             
-            // Calculer l'âge moyen
             const today = new Date();
             const avgAgeInDays = Math.floor(
                 plantsArray.reduce((sum, p) => {
@@ -1577,13 +1622,11 @@ function loadPlantsFromFirebase() {
                 }, 0) / totalPlants
             );
             
-            // Mettre à jour les statistiques
             document.getElementById('totalPlants').textContent = totalPlants;
             document.getElementById('healthyPlants').textContent = healthyPlants;
             document.getElementById('warningPlants').textContent = warningPlants;
             document.getElementById('avgAge').textContent = avgAgeInDays + 'j';
             
-            // Afficher les plantes
             let html = '<div class="plants-grid">';
             
             Object.keys(plants).forEach(plantId => {
@@ -1592,12 +1635,10 @@ function loadPlantsFromFirebase() {
                 const diseaseClass = plant.diseaseDetected ? 'status-disease' : 'status-healthy';
                 const diseaseText = plant.diseaseDetected ? 'Maladie détectée' : 'Saine';
                 
-                // Calculer l'âge
                 const plantDate = new Date(plant.plantDate);
                 const ageInDays = Math.floor((today - plantDate) / (1000 * 60 * 60 * 24));
                 const ageText = ageInDays < 30 ? `${ageInDays} jours` : `${Math.floor(ageInDays / 30)} mois`;
                 
-                // Dernier arrosage
                 const lastWatered = plant.lastWatered ? new Date(plant.lastWatered) : null;
                 const lastWateredText = lastWatered ? 
                     lastWatered.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }) : 
@@ -1680,7 +1721,6 @@ function loadPlantsFromFirebase() {
         });
 }
 
-// Fonctions pour les actions sur les plantes
 function showPlantDetails(plantId) {
     console.log('🔍 Affichage détails plante:', plantId);
     alert('Détails de la plante ' + plantId + '\n\nCette fonctionnalité sera implémentée prochainement.');
@@ -1697,7 +1737,6 @@ function waterPlant(plantId) {
     const confirmed = confirm('Voulez-vous arroser cette plante maintenant ?');
     if (!confirmed) return;
     
-    // Mettre à jour Firebase
     const updates = {};
     updates[`plants/${plantId}/lastWatered`] = Date.now();
     updates[`plants/${plantId}/waterCount`] = firebase.database.ServerValue.increment(1);
@@ -1705,7 +1744,7 @@ function waterPlant(plantId) {
     database.ref().update(updates)
         .then(() => {
             alert('✅ Plante arrosée avec succès !');
-            loadPlantsFromFirebase(); // Recharger la liste
+            loadPlantsFromFirebase();
         })
         .catch(error => {
             alert('❌ Erreur: ' + error.message);
@@ -1718,13 +1757,11 @@ function scanPlant(plantId) {
     showPage('health');
 }
 
-// Fonction pour ouvrir le modal d'ajout de plante
 function openAddPlantModal() {
     const modal = document.getElementById('plantModal');
     if (modal) {
         modal.style.display = 'flex';
         document.getElementById('modalTitle').textContent = '➕ Ajouter un Plant';
-        // Réinitialiser le formulaire
         document.getElementById('plantName').value = '';
         document.getElementById('plantVariety').value = 'Cœur de Bœuf';
         document.getElementById('plantDate').value = new Date().toISOString().split('T')[0];
@@ -1733,7 +1770,6 @@ function openAddPlantModal() {
     }
 }
 
-// Alias pour compatibilité
 function showAddPlantModal() {
     openAddPlantModal();
 }
@@ -1810,4 +1846,4 @@ window.toggleManualPump = toggleManualPump;
 window.updateManualDuration = updateManualDuration;
 window.saveScheduledConfig = saveScheduledConfig;
 
-console.log('✅ SmartPlant Dashboard - 3 Modes d\'Arrosage - Prêt !')
+console.log('✅ SmartPlant Dashboard - Version avec Notifications Email - Prêt !');
