@@ -6,6 +6,7 @@
 // ============================================
 // CONFIGURATION
 // ============================================
+alert("hey");
 const ROBOFLOW_PUBLISHABLE_KEY = "rf_kw1r2TticSP3SoDsARINZDjrnYk2";
 const ROBOFLOW_MODEL_NAME = "plant-disease-classification";
 const ROBOFLOW_MODEL_VERSION = "1";
