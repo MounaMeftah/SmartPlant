@@ -56,78 +56,9 @@
 // AFFICHER INFORMATIONS UTILISATEUR
 // ============================================
 function displayUserInfo(userData) {
-    // Attendre que le DOM soit prêt
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => displayUserInfoDOM(userData));
-    } else {
-        displayUserInfoDOM(userData);
-    }
-}
-
-function displayUserInfoDOM(userData) {
-    // Chercher ou créer une zone pour afficher l'utilisateur
-    let userInfoContainer = document.getElementById('userInfo');
-    
-    if (!userInfoContainer) {
-        // Créer un conteneur dans la sidebar
-        const sidebar = document.querySelector('.sidebar');
-        if (sidebar) {
-            userInfoContainer = document.createElement('div');
-            userInfoContainer.id = 'userInfo';
-            userInfoContainer.style.cssText = `
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                padding: 20px;
-                background: rgba(0, 0, 0, 0.3);
-                border-top: 1px solid rgba(255, 255, 255, 0.1);
-            `;
-            sidebar.appendChild(userInfoContainer);
-        }
-    }
-    
-    if (userInfoContainer) {
-        const roleIcon = userData.role === 'admin' ? '👑' : 
-                        userData.role === 'owner' ? '🌿' : '👤';
-        
-        const roleText = userData.role === 'admin' ? 'Administrateur' : 
-                        userData.role === 'owner' ? 'Propriétaire' : 'Invité';
-        
-        userInfoContainer.innerHTML = `
-            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                <div style="font-size: 32px;">${roleIcon}</div>
-                <div style="flex: 1; min-width: 0;">
-                    <div style="font-weight: 600; color: var(--text-primary); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                        ${userData.name}
-                    </div>
-                    <div style="font-size: 12px; color: var(--text-secondary);">
-                        ${roleText}
-                    </div>
-                </div>
-            </div>
-            <button onclick="logout()" style="
-                width: 100%;
-                padding: 10px;
-                background: rgba(239, 68, 68, 0.1);
-                border: 1px solid rgba(239, 68, 68, 0.3);
-                border-radius: 8px;
-                color: #fca5a5;
-                font-size: 13px;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 8px;
-                font-weight: 500;
-            " onmouseover="this.style.background='rgba(239, 68, 68, 0.2)'" 
-               onmouseout="this.style.background='rgba(239, 68, 68, 0.1)'">
-                <span style="font-size: 16px;">🚪</span>
-                <span>Déconnexion</span>
-            </button>
-        `;
-    }
+    // Ne rien afficher dans la sidebar
+    // Les infos utilisateur sont déjà sur la page d'accueil
+    console.log('✅ Utilisateur connecté:', userData.name);
 }
 
 // ============================================
