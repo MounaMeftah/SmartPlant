@@ -2,7 +2,7 @@
    EMAILJS CONFIGURATION - SmartPlant
    Configuration pour les notifications par email
    ============================================ */
-const EMAILJS_CONFIG = {
+   const EMAILJS_CONFIG = {
     // ⚠️ VOS VRAIES CLÉS EMAILJS (du test qui fonctionne)
     publicKey: 'CDN3p6l0QoJvNWnI0',  // Votre Public Key
     serviceID: 'service_9zpnxfx',     // Votre Service ID
