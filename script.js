@@ -101,6 +101,31 @@ async function loadTeachableMachineModel() {
         console.error('❌ Erreur chargement modèle:', error);
     }
 }
+function updateHomeUserCard() {
+            const user = getCurrentUser();
+            if (!user) return;
+            
+            const homeUserIcon = document.getElementById('homeUserIcon');
+            const homeUserName = document.getElementById('homeUserName');
+            const homeUserRole = document.getElementById('homeUserRole');
+            
+            const roleIcon = user.role === 'admin' ? '👑' : 
+                            user.role === 'owner' ? '🌿' : '👤';
+            
+            const roleText = user.role === 'admin' ? 'Administrateur' : 
+                            user.role === 'owner' ? 'Propriétaire' : 'Invité';
+            
+            if (homeUserIcon) homeUserIcon.textContent = roleIcon;
+            if (homeUserName) homeUserName.textContent = user.name;
+            if (homeUserRole) homeUserRole.textContent = roleText;
+        }
+        
+        // Mettre à jour au chargement de la page
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', updateHomeUserCard);
+        } else {
+            updateHomeUserCard();
+        }
 
 // ============================================
 // FIREBASE - ÉCOUTE EN TEMPS RÉEL

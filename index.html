@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🌿</text></svg>">
-    <title>SmartPlant</title>
+    <title>SmartPlant - Dashboard</title>
+    
+    <!-- ⚠️ IMPORTANT: Script d'authentification EN PREMIER -->
+    <script src="auth.js"></script>
     
     <!-- Styles CSS -->
     <link rel="stylesheet" href="style.css">
@@ -62,6 +65,9 @@
             <span class="nav-icon">⚙️</span>
             <span>Configuration</span>
         </div>
+        
+        <!-- Zone utilisateur ajoutée dynamiquement par auth.js -->
+        <div id="userInfo"></div>
     </div>
 
     <!-- ============================================
@@ -74,8 +80,50 @@
              ======================================== -->
         <div id="home" class="page active">
             <div class="page-header">
-                <h1 class="page-title">Dashboard</h1>
-                <p class="page-subtitle">Vue d'ensemble de votre jardin intelligent</p>
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                    <div>
+                        <h1 class="page-title">Dashboard</h1>
+                        <p class="page-subtitle">Vue d'ensemble de votre jardin intelligent</p>
+                    </div>
+                    <!-- Carte utilisateur sur la page d'accueil -->
+                    <div id="homeUserCard" style="
+                        padding: 15px 20px;
+                        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.05) 100%);
+                        border: 1px solid rgba(16, 185, 129, 0.3);
+                        border-radius: 12px;
+                        display: flex;
+                        align-items: center;
+                        gap: 12px;
+                    ">
+                        <div id="homeUserIcon" style="font-size: 28px;"></div>
+                        <div>
+                            <div id="homeUserName" style="font-weight: 600; color: var(--text-primary); font-size: 14px;">
+                                Chargement...
+                            </div>
+                            <div id="homeUserRole" style="font-size: 12px; color: var(--text-secondary);">
+                            </div>
+                        </div>
+                        <button onclick="logout()" style="
+                            padding: 8px 15px;
+                            background: rgba(239, 68, 68, 0.1);
+                            border: 1px solid rgba(239, 68, 68, 0.3);
+                            border-radius: 8px;
+                            color: #fca5a5;
+                            font-size: 12px;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                            display: flex;
+                            align-items: center;
+                            gap: 6px;
+                            font-weight: 500;
+                            margin-left: 10px;
+                        " onmouseover="this.style.background='rgba(239, 68, 68, 0.2)'" 
+                           onmouseout="this.style.background='rgba(239, 68, 68, 0.1)'">
+                            <span style="font-size: 14px;">🚪</span>
+                            <span>Déconnexion</span>
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <!-- Cartes Capteurs -->
@@ -159,9 +207,9 @@
 
             <!-- Filtres temporels -->
             <div style="margin-bottom: 30px; display: flex; gap: 10px; flex-wrap: wrap;">
-                <button class="btn btn-secondary" onclick="changeTimeRange('realtime')">Temps Réel</button>
-                <button class="btn btn-secondary" onclick="changeTimeRange('week')">7 Jours</button>
-                <button class="btn btn-secondary" onclick="changeTimeRange('month')">30 Jours</button>
+                <button class="btn btn-secondary read-only-allowed" onclick="changeTimeRange('realtime')">Temps Réel</button>
+                <button class="btn btn-secondary read-only-allowed" onclick="changeTimeRange('week')">7 Jours</button>
+                <button class="btn btn-secondary read-only-allowed" onclick="changeTimeRange('month')">30 Jours</button>
             </div>
 
             <!-- Capteurs -->
@@ -544,13 +592,13 @@
 
             <!-- Filtres -->
             <div style="display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap;">
-                <select id="filterPlants" class="input-field" style="width: auto;" onchange="filterPlants()">
+                <select id="filterPlants" class="input-field read-only-allowed" style="width: auto;" onchange="filterPlants()">
                     <option value="all">Tous les plants</option>
                     <option value="healthy">En bonne santé</option>
                     <option value="warning">Attention</option>
                     <option value="disease">Maladie</option>
                 </select>
-                <select id="sortPlants" class="input-field" style="width: auto;" onchange="sortPlants()">
+                <select id="sortPlants" class="input-field read-only-allowed" style="width: auto;" onchange="sortPlants()">
                     <option value="name">Nom</option>
                     <option value="age">Âge</option>
                     <option value="health">Santé</option>
@@ -838,5 +886,35 @@
     <script src="plants-module.js"></script>
     <script src="configuration-module.js"></script>
     <script src="health-module.js"></script>
+    
+    <!-- 6. Script pour afficher l'utilisateur sur la page d'accueil -->
+    <script>
+        // Afficher les informations utilisateur sur la page d'accueil
+        function updateHomeUserCard() {
+            const user = getCurrentUser();
+            if (!user) return;
+            
+            const homeUserIcon = document.getElementById('homeUserIcon');
+            const homeUserName = document.getElementById('homeUserName');
+            const homeUserRole = document.getElementById('homeUserRole');
+            
+            const roleIcon = user.role === 'admin' ? '👑' : 
+                            user.role === 'owner' ? '🌿' : '👤';
+            
+            const roleText = user.role === 'admin' ? 'Administrateur' : 
+                            user.role === 'owner' ? 'Propriétaire' : 'Invité';
+            
+            if (homeUserIcon) homeUserIcon.textContent = roleIcon;
+            if (homeUserName) homeUserName.textContent = user.name;
+            if (homeUserRole) homeUserRole.textContent = roleText;
+        }
+        
+        // Mettre à jour au chargement de la page
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', updateHomeUserCard);
+        } else {
+            updateHomeUserCard();
+        }
+    </script>
 </body>
 </html>

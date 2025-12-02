@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🌿</text></svg>">
+    <title>SmartPlant - Connexion</title>
+    
+    <link rel="stylesheet" href="auth-style.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo-section">
+            <div class="logo-icon">🌿</div>
+            <h1 class="logo-title">SmartPlant</h1>
+            <p class="logo-subtitle">Système de Monitoring Intelligent</p>
+        </div>
+
+        <div id="alertBox" class="alert">
+            <span id="alertIcon"></span>
+            <span id="alertMessage"></span>
+        </div>
+
+        <!-- Tabs Connexion / Inscription -->
+        <div class="tabs-container">
+            <button class="tab active" onclick="switchTab('login')">
+                🔐 Connexion
+            </button>
+            <button class="tab" onclick="switchTab('register')">
+                ➕ Créer un compte
+            </button>
+        </div>
+
+        <!-- Formulaire de Connexion -->
+        <div id="loginForm" class="form-container active">
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label">👤 Nom d'utilisateur</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input 
+                            type="text" 
+                            id="loginUsername" 
+                            class="form-input" 
+                            placeholder="Entrez votre nom d'utilisateur"
+                            required
+                            autocomplete="username"
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">🔒 Mot de passe</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔒</span>
+                        <input 
+                            type="password" 
+                            id="loginPassword" 
+                            class="form-input" 
+                            placeholder="Entrez votre mot de passe"
+                            required
+                            autocomplete="current-password"
+                        >
+                        <span class="password-toggle" onclick="togglePassword('loginPassword')">👁️</span>
+                    </div>
+                </div>
+
+                <div class="remember-forgot">
+                    <label class="remember-me">
+                        <input type="checkbox" id="rememberMe">
+                        <span>Se souvenir</span>
+                    </label>
+                    <a href="#" class="forgot-password" onclick="handleForgotPassword(event)">Mot de passe oublié ?</a>
+                </div>
+
+                <button type="submit" class="btn-submit" id="loginBtn">
+                    <span>🔐</span>
+                    <span>Se connecter</span>
+                </button>
+            </form>
+
+
+        </div>
+
+        <!-- Formulaire d'Inscription -->
+        <div id="registerForm" class="form-container">
+            <form onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label class="form-label">👤 Nom complet</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input 
+                            type="text" 
+                            id="registerName" 
+                            class="form-input" 
+                            placeholder="Ex: Mouna Ben Ali"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">📧 Email</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">📧</span>
+                        <input 
+                            type="email" 
+                            id="registerEmail" 
+                            class="form-input" 
+                            placeholder="votre.email@exemple.com"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">🆔 Nom d'utilisateur</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🆔</span>
+                        <input 
+                            type="text" 
+                            id="registerUsername" 
+                            class="form-input" 
+                            placeholder="Choisissez un nom d'utilisateur"
+                            required
+                            autocomplete="username"
+                        >
+                    </div>
+                    <small style="color: var(--text-secondary); font-size: 12px; margin-top: 5px; display: block;">
+                        3-20 caractères, lettres et chiffres uniquement
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">🔒 Mot de passe</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔒</span>
+                        <input 
+                            type="password" 
+                            id="registerPassword" 
+                            class="form-input" 
+                            placeholder="Créez un mot de passe fort"
+                            required
+                            autocomplete="new-password"
+                            oninput="checkPasswordStrength()"
+                        >
+                        <span class="password-toggle" onclick="togglePassword('registerPassword')">👁️</span>
+                    </div>
+                    <div class="password-strength">
+                        <div class="strength-bar">
+                            <div class="strength-fill" id="strengthFill"></div>
+                        </div>
+                        <span id="strengthText" style="color: var(--text-secondary);"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">🔒 Confirmer le mot de passe</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔒</span>
+                        <input 
+                            type="password" 
+                            id="registerPasswordConfirm" 
+                            class="form-input" 
+                            placeholder="Confirmez votre mot de passe"
+                            required
+                            autocomplete="new-password"
+                        >
+                        <span class="password-toggle" onclick="togglePassword('registerPasswordConfirm')">👁️</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit" id="registerBtn">
+                    <span>➕</span>
+                    <span>Créer mon compte</span>
+                </button>
+
+                <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                    En créant un compte, vous acceptez nos conditions d'utilisation
+                </p>
+            </form>
+        </div>
+
+        <p class="footer-text">
+            © 2024 SmartPlant IoT Dashboard
+        </p>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <script src="auth-handler.js"></script>
+</body>
+</html>

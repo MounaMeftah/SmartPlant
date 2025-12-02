@@ -1,4 +1,61 @@
 {
+  "users": {
+    "admin": {
+      "name": "Administrateur",
+      "email": "admin@smartplant.com",
+      "password": "smartplant2024",
+      "role": "admin",
+      "createdAt": 1732000000000,
+      "lastLogin": 1732640400000
+    },
+    "mouna": {
+      "name": "Mouna",
+      "email": "mouna@example.com",
+      "password": "mouna123",
+      "role": "owner",
+      "createdAt": 1732100000000,
+      "lastLogin": 1732630000000
+    },
+    "guest": {
+      "name": "Invité",
+      "email": "guest@smartplant.com",
+      "password": "guest2024",
+      "role": "viewer",
+      "createdAt": 1732200000000,
+      "lastLogin": 1732620000000
+    }
+  },
+  "user_registrations": {
+    "-O7xR1aB2cDe3fGh4iJk": {
+      "username": "mouna",
+      "name": "Mouna",
+      "email": "mouna@example.com",
+      "timestamp": 1732100000000
+    }
+  },
+  "login_logs": {
+    "-O7xL1aB2cDe3fGh4iJk": {
+      "username": "admin",
+      "name": "Administrateur",
+      "success": true,
+      "timestamp": 1732640400000,
+      "userAgent": "Mozilla/5.0"
+    },
+    "-O7xL1aB2cDe3fGh4iJl": {
+      "username": "mouna",
+      "name": "Mouna",
+      "success": true,
+      "timestamp": 1732630000000,
+      "userAgent": "Mozilla/5.0"
+    },
+    "-O7xL1aB2cDe3fGh4iJm": {
+      "username": "test",
+      "name": "",
+      "success": false,
+      "timestamp": 1732625000000,
+      "userAgent": "Mozilla/5.0"
+    }
+  },
   "alertes": {
     "arrosage": "",
     "dernierEmail": ""

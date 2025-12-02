@@ -14,7 +14,7 @@
 #define WIFI_PASSWORD "5126Gh8:"
 
 // Configuration Firebase
-#define FIREBASE_HOST "smartpant-4bc8f-default-rtdb.firebaseio.com"
+#define FIREBASE_HOST "https://smartpant-4bc8f-default-rtdb.firebaseio.com/"
 #define FIREBASE_AUTH "PPNrPocgs5voYbAuySHcaBP9XVuXySKUizsNYQxH"
 
 // ============================================
@@ -23,8 +23,8 @@
 #define DHT_PIN 2
 #define DHT_TYPE DHT22
 #define CAPTEUR_HUMIDITE_SOL A0
-#define CAPTEUR_PLUIE A1
-#define RELAIS_POMPE 7
+#define CAPTEUR_PLUIE A0
+#define RELAIS_POMPE 26
 #define LED_STATUS 13
 
 // Communication ESP8266 (RX, TX)
@@ -87,8 +87,9 @@ bool firebaseConnecte = false;
 // SETUP
 // ============================================
 void setup() {
-  Serial.begin(9600);
-  esp8266.begin(9600);
+  Serial.begin(115200);
+  esp8266.begin(115200);
+  Serial.println("SmartPlant - ESP32 démarre...");
   
   Serial.println(F("\n🌿 SmartPlant - Arduino UNO"));
   Serial.println(F("============================"));
