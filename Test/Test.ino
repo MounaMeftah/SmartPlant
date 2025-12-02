@@ -36,10 +36,10 @@ SoftwareSerial esp8266(10, 11); // RX=10, TX=11
 DHT dht(DHT_PIN, DHT_TYPE);
 
 // Variables capteurs
-float temperature = 0;
-float humiditeAir = 0;
-int humiditeSol = 0;
-int pluie = 0;
+float temperature = 10;
+float humiditeAir = 10;
+int humiditeSol = 10;
+int pluie = 10;
 
 // Variables système
 String modeArrosage = "automatique"; // automatique, manuel, programme
