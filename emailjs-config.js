@@ -20,7 +20,7 @@
     },
     
     // Délai minimum entre deux emails (en minutes)
-    minEmailDelay: 2,  // Un email max toutes les 30 min par type d'alerte
+    minEmailDelay: 30,  // Un email max toutes les 30 min par type d'alerte
     
     // Adresse email de réception
     recipientEmail: 'meftahmouna691@gmail.com'
